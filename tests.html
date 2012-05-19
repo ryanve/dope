@@ -128,25 +128,28 @@
 		</tr>
 		<tr>
 			<td><code>domData('div').dataset(<b>{</b>
-			<br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
-			<br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
-			<br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
-			<br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
-			<br><b>}</b>).deletes(<span class=string>'butchCoolidge julesWinnfield'</span>)<br>&nbsp;&nbsp;.dataset(<span class=string>'miaWallace'</span>)</code></td>
+		  	<br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
+		   <br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
+		   <br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
+		   <br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
+		  <br><b>}</b>).deletes(<span class=string>'butchCoolidge julesWinnfield'</span>)<br>&nbsp;&nbsp;.dataset(<span class=string>'miaWallace'</span>)</code></td>
 			<td><code>Uma Thurman</code></td>
 			<td><code id=set-multi></code></td>
 		</tr>
 	</table>
 	
 </body> 
+	<script>this.$ = this.$ || function() {}; $.fn = $.fn || {};</script>
 	<script src="http://cdn.airve.com/scripts/domdata/domdata.1.0.5.js"></script>
 	<script>
-	(function(domData, document) {
-		var docElem = document.documentElement;
+	(function(context, domData, document) {
+		var docElem = document.documentElement
+		  , log = context.console && typeof console.log === 'function'
+		    ? function(s) { console.log(s); } : function() {};
 
-		  function byId(id) {
-			  return document.getElementById(id);
-		  }
+		function byId(id) {
+		    return document.getElementById(id);
+		}
 		  
 		  byId('instanceof').innerHTML = domData() instanceof domData;
 		  byId('body-selector').innerHTML = document.body === domData('body')[0];
@@ -172,8 +175,10 @@
 		   , julesWinnfield: 'Samuel Jackson'
 		  }).deletes('butchCoolidge julesWinnfield')
 		    .dataset('miaWallace');
+			
+		log($.fn.dataset);
 
-	}(domData, document));
+	}(this, domData, document));
 	</script>
 </html>
 

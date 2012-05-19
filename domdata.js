@@ -341,7 +341,7 @@
      * @param  {Array|string}       keys
      */
     api['deletes'] = deletes = function(elems, keys) {
-        var j = 0, l, i = 0, h, name, el, collection;
+        var j, l, i = 0, h, name, el, collection;
         if (elems && keys) {
             keys = datatizeAll(keys); // compact data-names
             h = keys.length;
@@ -450,7 +450,18 @@
         var j, a, m;
         
         if (host) {
-            a = ['dataset', 'deletes', 'render', 'camelize', 'datatize', 'datatizeAll', 'camelizeAll', 'toDataSelector', 'queryData'];
+		
+            a = [ 'dataset'
+			    , 'deletes'
+				, 'render'
+			    , 'camelize'
+			    , 'datatize'
+				, 'datatizeAll'
+			    , 'camelizeAll'
+				, 'queryData'
+			    , 'toDataSelector' 
+				];
+
             j = 9; // a.length;
 
             while (j--) {
@@ -462,13 +473,13 @@
 
             if (typeof host === 'function' && host[FN]) {
                 while (j < 2) {// merge dataset/deletes into the host chain
-                    m = a[j];  // method name
+                    m = a[j++];  // method name
                     // don't overwrite existing methods unless forced
                     if ( force || !host[FN][m] ) { host[FN][m] = api[FN][m]; }
                 }
             }
         }
-        
+
         return api;
 
     };//bridge
