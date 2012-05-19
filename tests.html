@@ -1,0 +1,179 @@
+<!doctype html>
+<html class="solarized" lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
+<head>
+	<meta charset=utf-8>
+	<title>domData Test Suite</title>
+	<meta name=viewport content="width=device-width,initial-scale=1.0">
+	<link rel=stylesheet href="http://cdn.airve.com/css/packed/normalize_responsive_solarized.20120408.css">
+	<meta name=author content="Ryan Van Etten">
+	<meta name=description content="JavaScript library test suite"> 
+	<style>
+	body{margin:1em auto;max-width:960px;width:94%;padding:0 3%}
+	a{text-decoration:none;cursor:pointer}
+	pre,td,th{padding:1em;text-align:left;border-left:1px solid #eed}
+	td{font-weight:bold;color:#2aa198}
+	td:first-child{font-weight:normal;color:#586e75}
+	td:last-child{color:#dc322f}
+	pre{padding:1em;background:#eee8d5}
+	</style>
+	<!--code.google.com/p/html5shiv/ -->
+	<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+	
+	<header>
+		<h1><a href="http://github.com/ryanve/domdata">domData</a> Test Suite</h1>
+	</header>
+	
+	<pre><code><strong>var</strong> docElem = document.documentElement; <small>// html element</small></code></pre>
+	
+	<!-- In the DOM all 3 test divs should have `data-mia-wallace` and `data-vincent-vega`: -->
+  	<!-- They should NOT have `data-butch-coolidge` or `data-jules-winnfield`: -->
+	<div class="test"></div>
+	<div class="test"></div>
+	<div class="test"></div>
+	
+	<table>
+		<tr>
+			<th scope="col">test<br>code</th>
+			<th scope="col">correct<br>output</th>
+			<th scope="col">actual<br>output</th>
+		</tr>
+		<tr>
+			<td><code>domData() <strong>instanceof</strong> domData</code></td>
+			<td><code>true</code></td>
+			<td><code id=instanceof></code></td>
+		</tr>
+		<tr>
+			<td><code>document.body === domData('body')[0]</code></td>
+			<td><code>true</code></td>
+			<td><code id=body-selector></code></td>
+		</tr>
+		<tr>
+			<td><code>document.body === domData(document.body)[0]</code></td>
+			<td><code>true</code></td>
+			<td><code id=body-node></code></td>
+		</tr>
+		<tr>
+			<td><code>document.body === domData([document.body])[0]</code></td>
+			<td><code>true</code></td>
+			<td><code id=body-list></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('').length</code></td>
+			<td><code>0</code></td>
+			<td><code id=empty-length></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('body').length</code></td>
+			<td><code>1</code></td>
+			<td><code id=body-length></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('div').length</code></td>
+			<td><code>3</code></td>
+			<td><code id=select-tags></code></td>
+		</tr>
+		<tr>
+			<td><code><strong>typeof</strong> domData('html').dataset()</code></td>
+			<td><code>object</code></td>
+			<td><code id=typeof-dataset></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('html').dataset() === domData.dataset(docElem)</code></td>
+			<td><code>true</code></td>
+			<td><code id=dataset-object></code></td>
+		</tr>
+		<tr>
+			<td><code>'movieName' <strong>in</strong> domData('html')</code></td>
+			<td><code>true</code></td>
+			<td><code id=in></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('html').dataset('movieName')</code></td>
+			<td><code>Pulp Fiction</code></td>
+			<td><code id=get-movie-name></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('html')<br>.dataset('director', 'Tarantino')<br>.dataset('director')</code></td>
+			<td><code>Tarantino</code></td>
+			<td><code id=set-director></code></td>
+		</tr>
+		<tr>
+			<td><code>domData.dataset(docElem, 'year', 1994).tagName</code></td>
+			<td><code>HTML</code></td>
+			<td><code id=set-year></code></td>
+		</tr>
+		<tr>
+			<td><code>'1994' === domData('html').dataset('year')</code></td>
+			<td><code>true</code></td>
+			<td><code id=get-year></code></td>
+		</tr>
+		<tr>
+			<td><code><span class=red>1994</span> === domData('html').dataset(['year'])</code></td>
+			<td><code>true</code></td>
+			<td><code id=get-year-exact></code></td>
+		</tr>
+		<tr>
+			<td><code><span class=orange>true</span> === domData.render('true')</code></td>
+			<td><code>true</code></td>
+			<td><code id=render-true></code></td>
+		</tr>
+		<tr>
+			<td><code>domData.deletes(docElem, 'genre producer').tagName</code></td>
+			<td><code>HTML</code></td>
+			<td><code id=deletes></code></td>
+		</tr>
+		<tr>
+			<td><code>domData('div').dataset(<b>{</b>
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
+			<br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
+			<br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
+			<br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
+			<br><b>}</b>).deletes(<span class=string>'butchCoolidge julesWinnfield'</span>)<br>&nbsp;&nbsp;.dataset(<span class=string>'miaWallace'</span>)</code></td>
+			<td><code>Uma Thurman</code></td>
+			<td><code id=set-multi></code></td>
+		</tr>
+	</table>
+	
+</body> 
+	<script src="http://cdn.airve.com/scripts/domdata/domdata.1.0.5.js"></script>
+	<script>
+	(function(domData, document) {
+		var docElem = document.documentElement;
+
+		  function byId(id) {
+			  return document.getElementById(id);
+		  }
+		  
+		  byId('instanceof').innerHTML = domData() instanceof domData;
+		  byId('body-selector').innerHTML = document.body === domData('body')[0];
+		  byId('body-node').innerHTML = document.body === domData(document.body)[0];
+		  byId('body-list').innerHTML = document.body === domData([document.body])[0];
+		  byId('body-length').innerHTML = domData('body').length;
+		  byId('select-tags').innerHTML = domData('div').length;
+		  byId('empty-length').innerHTML = domData('').length;
+		  byId('typeof-dataset').innerHTML = typeof domData('html').dataset();
+		  byId('dataset-object').innerHTML = domData('html').dataset() === domData.dataset(docElem);
+		  byId('in').innerHTML = 'movieName' in domData('html').dataset();
+		  byId('get-movie-name').innerHTML = domData('html').dataset('movieName');
+		  byId('set-director').innerHTML = domData('html').dataset('director', 'Tarantino').dataset('director');
+		  byId('set-year').innerHTML = domData.dataset(docElem, 'year', 1994).tagName;
+		  byId('get-year').innerHTML = '1994' === domData('html').dataset('year');
+		  byId('get-year-exact').innerHTML = 1994 === domData('html').dataset(['year']);
+		  byId('render-true').innerHTML = true === domData.render('true');
+		  byId('deletes').innerHTML = domData.deletes(docElem, 'genre producer').tagName;
+		  byId('set-multi').innerHTML = domData('div').dataset({ 
+		  	 vincentVega: 'John Travolta'
+		   , miaWallace: 'Uma Thurman'
+		   , butchCoolidge: 'Bruce Willis'
+		   , julesWinnfield: 'Samuel Jackson'
+		  }).deletes('butchCoolidge julesWinnfield')
+		    .dataset('miaWallace');
+
+	}(domData, document));
+	</script>
+</html>
+

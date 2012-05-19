@@ -1,0 +1,14 @@
+{
+    "name": "domdata",
+    "description": "HTML5 dataset API",
+    "version": "1.0.5",
+    "homepage": "https://github.com/ryanve/domdata",
+    "author": "Ryan Van Etten <@ryanve>",
+    "keywords": ["ender", "dataset", "data", "html5", "dom"],
+    "main": "./domdata.js",
+	"ender": "noop",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ryanve/domdata.git"
+    }
+}
