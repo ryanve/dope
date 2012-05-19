@@ -6,7 +6,7 @@
     "author": "Ryan Van Etten <@ryanve>",
     "keywords": ["ender", "dataset", "data", "html5", "dom"],
     "main": "./domdata.js",
-	"ender": "noop",
+    "ender": "noop",
     "repository": {
         "type": "git",
         "url": "https://github.com/ryanve/domdata.git"
