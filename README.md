@@ -150,7 +150,7 @@ $.datatize('miaWallace')  // data-mia-wallace
 ### $.camelizeAll()
 
 ```js
-$.camelizeAll(list)  // camelize values in from an array (or CSV or SSV string) and return compact array
+$.camelizeAll(list)  // camelize values from an array (or CSV or SSV string) and return compact array
 ```
 
 ```js
