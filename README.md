@@ -60,7 +60,7 @@ $('div').dataset(['stars'])                         // returns 5
 ### $.fn.deletes()
 
 ```js
-$(elem).deletes(keys) // remove 1 or more space-separated data attribute from elem (or all elems in set)
+$(elem).deletes(keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
 ```
 
 ```js
@@ -72,7 +72,7 @@ $(document.body).deletes('movieName')      // remove [data-movie-name] from the 
 ### $.dataset()
 
 ```js
-$.dataset(elem )            // get object containing all data attributes on elem (or the 1st elem in set)
+$.dataset(elem )            // get object containing all data attrs on elem (or 1st elem in set)
 $.dataset(elem, key)        // get data attribute on elem (or 1st elem in set)
 $.dataset(elem, key, value) // set data attribute on elem (or on all the elems in set)
 $.dataset(elem, object)     // set multiple data attributes via key/value pairs
@@ -88,7 +88,7 @@ $.dataset(document.body, 'movieName')               // returns "Pulp Fiction"
 ### $.deletes()
 
 ```js
-$.deletes(elem, keys) // remove 1 or more space-separated data attribute from elem (or all elems in set)
+$.deletes(elem, keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
 ```
 
 ```js
@@ -150,7 +150,7 @@ $.datatize('miaWallace')  // data-mia-wallace
 ### $.camelizeAll()
 
 ```js
-$.camelizeAll(list)  // camelize all values in an array (or CSV or SSV string) and return a compact array
+$.camelizeAll(list)  // camelize values in from an array (or CSV or SSV string) and return compact array
 ```
 
 ```js
@@ -160,7 +160,7 @@ $.camelizeAll('data-mia-wallace data-vincent-vega')  // ['miaWallace', 'vincentV
 ### $.datatizeAll()
 
 ```js
-$.datatizeAll(list)  // datatize all values in an array (or CSV or SSV string) and return a compact array
+$.datatizeAll(list)  // datatize values from an array (or CSV or SSV string) and return compact array
 ```
 
 ```js
