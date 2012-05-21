@@ -205,6 +205,10 @@ define('domdata', domData.noConflict); // define the module and simultaneously d
 define('domdata', function(){ return domData; }); // define the module w/o destoying the global
 ```
 
+# CDN
+
+domData is available on [airve.github.com](http://airve.github.com/)
+
 # License
 
 ### [domData](http://github.com/ryanve/domdata) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
