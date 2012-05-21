@@ -186,15 +186,15 @@
 
 	<script>
 		// Make a dummy fn object to test that domData.bridge() works:
-		this.$ = this.$ || function() {};
-		$.fn = $.fn || {};
+		//this.$ = this.$ || function() {};
+		//$.fn = $.fn || {};
 	</script>
 	
 	<!-- github.com/ryanve/domdata  -->
-	<script src="domdata.min.js"></script>
+	<script src="domdata.js"></script>
 
 	<script>
-	(function(document, console, domData, jQuery) {
+	(function(document, console, domData) {
 
 		var n, props = {}, tests = {}
 		  , docElem = document.documentElement;
@@ -235,6 +235,7 @@
 		tests['query-data'] = domData.queryData('miaWallace').length;
 		tests['query-data-multi'] = domData.queryData('miaWallace movieName').length;
 
+		// print the test outputs:
 		for (n in tests) {
 			if (tests.hasOwnProperty(n)) {
 				document.getElementById(n).innerHTML = tests[n];
@@ -250,8 +251,8 @@
 			console.log(props); // top-level props
 			console.log(domData.prototype);
 		}
-		
-	}(this.document, this.console, this.domData, this.jQuery));
+
+	}(this.document, this.console, this.domData));
 	</script>
 </body> 
 </html>

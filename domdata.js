@@ -44,9 +44,9 @@
 
     /**
      * api is the export (methods are added to it)
-     * @param  {Array|string|null}  item 
-     * @param  {Object=}            root
-     * @return {Object}             array-like object
+     * @param  {*}        item 
+     * @param  {Object=}  root
+     * @return {Object}   array-like object
      */
     function api(item, root) {
         return new Api(item, root);
@@ -54,8 +54,8 @@
 
     /**
      * @constructor
-     * @param {Object|string|null}  item 
-     * @param {Object|null}         root
+     * @param {*}        item 
+     * @param {Object=}  root
      */
     function Api(item, root) {
         var i;
@@ -244,7 +244,6 @@
      *                                 or on the 1st elem in a set. (not part of the public api)
      *
      * @param   {Object}               el is a native element, node list, or matched set
-     * @return  {Object}
      */
     getDataset = function (el) {
         var obj, i = 0;
@@ -427,7 +426,7 @@
     /**
      * noConflict()  Destroy the global and return the api. Optionally call 
      *               a function that gets the api supplied as the first arg.
-     * @param        {function()=}    optional callback
+     * @param        {function(*)=} callback   optional callback function
      * @example      var localDomData = domData.noConflict();
      * @example      domData.noConflict(function(domData){    });
      */
