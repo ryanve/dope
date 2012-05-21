@@ -1,7 +1,7 @@
 [domData](http://github.com/ryanve/domdata)
 =======
 
-HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or integrates into any [jQuery](http://jquery.com/)-compatible host. It runs screamin-fast, cross-browser, and [gzips < 1.5k](http://airve.github.com/js/domdata/domdata.min.js). Got data? =]
+domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 1.5k](http://airve.github.com/js/domdata/domdata.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
 
 # domData()
 
@@ -20,16 +20,16 @@ When used **standalone**, domData's methods are accessible via the `domData` var
 ```js
 (function($) {
     // use $ as an alias for domData in here
-    $('body').dataset('foo', 'bar');
+    $(document.body).dataset('foo', 'bar');
 }(domData));
 ```
 
-When used alongside a **host** lib like jQuery, domData's methods are also automatically integrated into the host:
+When used alongside a **host** lib like [jQuery](http://jquery.com/), domData's methods are also automatically integrated into the host:
 
 ```js
 (function($) {
     // use $ as an alias for jQuery in here
-    $('body').dataset('foo', 'bar');
+    $(document.body).dataset('foo', 'bar');
 }(jQuery));
 ```
 
@@ -42,7 +42,7 @@ To simplify the docs below, let `$` represent `domData` or the host lib.
 ### $.fn.dataset()
 
 ```js
-$(elem).dataset()           // get object containing all data attributes on elem (or the 1st elem in set)
+$(elem).dataset()           // get object containing all data attributes on elem (or 1st elem in set)
 $(elem).dataset(key)        // get data attribute on elem (or 1st elem in set)
 $(elem).dataset(key, value) // set data attribute on elem (or on all the elems in set)
 $(elem).dataset(object)     // set multiple data attributes via an object's key/value pairs
@@ -95,7 +95,117 @@ $.deletes(elem, keys) // remove 1 or more space-separated data attribute from el
 $.deletes(document.body, 'movieName')      // remove [data-movie-name] from the <body> element
 ```
 
-## License
+### $.queryData()
+
+```js
+$.queryData(keys)         // get elements by data key (keys can be an array or CSV or SSV string)
+```
+
+```js
+$.queryData('miaWallace vincentVega')  // Delegate to $("[data-mia-wallace],[data-vincent-vega]")
+```
+
+### $.render()
+
+```js
+$.render(str)        // convert stringified primitives to correct value, e.g. "true" to true 
+```
+
+```js
+$.render('10')      // 10
+$.render('true')    // true
+```
+
+### $.toDataSelector()
+
+```js
+$.toDataSelector(keys)   // convert an array (or CSV or SSV string) of data keys into a selector string
+```
+
+```js
+$.toDataSelector('a b cD')  // "[data-a],[data-b],[data-c-d]"
+```
+
+### $.camelize()
+
+```js
+$.camelize(str)       // convert a dashed data- string into camelCase
+```
+
+```js
+$.camelize('data-mia-wallace')  // 'miaWallace'
+$.camelize('mia-wallace')       // 'miaWallace'
+```
+
+### $.datatize()
+
+```js
+$.datatize(str)       // convert a camelized string into a lowercase dashed data- attribute name
+```
+
+```js
+$.datatize('miaWallace')  // data-mia-wallace
+```
+
+### $.camelizeAll()
+
+```js
+$.camelizeAll(list)  // camelize all values in an array (or CSV or SSV string) and return a compact array
+```
+
+```js
+$.camelizeAll('data-mia-wallace data-vincent-vega')  // ['miaWallace', 'vincentVega']
+```
+
+### $.datatizeAll()
+
+```js
+$.datatizeAll(list)  // datatize all values in an array (or CSV or SSV string) and return a compact array
+```
+
+```js
+$.datatizeAll('miaWallace vincentVega')  // ['data-mia-wallace', 'data-vincent-vega']
+```
+
+### $.noConflict()
+
+Destroy the global `domData` and return `domData`. Optionally call a function that gets `domData` supplied as the first arg.
+
+```js
+domData.noConflict(); // simply destroys the global
+```
+
+```js
+domData.noConflict(function(domData){  
+  /* use domData in here */  
+});
+```
+
+### $.bridge()
+
+The bridge handles the integration of methods into a host. If a host is detected at runtime, then the bridge will run once automatically. Existing methods on the host are not overwritten unless the 2nd parameter param is set to `true`.
+
+```js
+$.bridge(host)        // integrate domData's methods into host (existing methods are not overwritten)
+$.bridge(host, true)  // integrate domData's methods into host (overwriting existing methods, if any)
+```
+
+```js
+$.bridge(jQuery)      // integrate domData's methods into jQuery
+$.bridge(ender)       // integrate domData's methods into ender
+```
+
+# [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
+
+```js
+define('domdata', domData.noConflict); // define the module and simultaneously destroy the global
+```
+
+```js
+define('domdata', function(){ return domData; }); // define the module w/o destoying the global
+```
+
+# License
 
 ### [domData](http://github.com/ryanve/domdata) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
 
