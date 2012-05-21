@@ -1,7 +1,7 @@
 [domData](http://github.com/ryanve/domdata)
 =======
 
-HTML5 dataset API abstraction that works as a standalone lib or integrates into any jQuery-compatible host. It runs screamin-fast, cross-browser, and gzips < 1.5k. Got data? =]
+HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or integrates into any [jQuery](http://jquery.com/)-compatible host. It runs screamin-fast, cross-browser, and [gzips < 1.5k](http://airve.github.com/js/domdata/domdata.min.js). Got data? =]
 
 ## License
 

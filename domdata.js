@@ -6,8 +6,13 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.0.5
+ * @version     1.0.8
  */
+
+/*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
+, continue: true, debug: true, eqeq: true, es5: true, forin: true, newcap: true
+, nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
+, sub: true, white: true, indent: 4, maxerr: 50 */
 
 (function(context, doc) {
 
@@ -19,7 +24,7 @@
       , toDataSelector, camelizeAll, datatizeAll, getDataset, queryData
       , supportsDOMStringMap = typeof DOMStringMap !== 'undefined'
       , supportsQSA = !!doc.querySelectorAll
-      
+
         /**
          * @param {string}      s      selector string
          * @param {Object=}     root
@@ -242,7 +247,7 @@
      * @return  {Object}
      */
     getDataset = function (el) {
-        var obj;
+        var obj, i = 0;
         el = el && (el.nodeType ? el : el[0]); // isolate node
         if ( !el || el.nodeType !== 1) { return obj; } // undefined
         
@@ -341,7 +346,7 @@
      * @param  {Array|string}       keys
      */
     api['deletes'] = deletes = function(elems, keys) {
-        var j, l, i = 0, h, name, el, collection;
+        var j, l, i = 0, h, name, el;
         if (elems && keys) {
             keys = datatizeAll(keys); // compact data-names
             h = keys.length;
