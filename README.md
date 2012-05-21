@@ -202,7 +202,7 @@ define('domdata', domData.noConflict); // define the module and simultaneously d
 ```
 
 ```js
-define('domdata', function(){ return domData; }); // define the module w/o destoying the global
+define('domdata', function(){ return domData; }); // define the module and keep the global too
 ```
 
 # CDN
