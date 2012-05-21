@@ -167,7 +167,19 @@ $.datatizeAll(list)  // datatize values from an array (or CSV or SSV string) and
 $.datatizeAll('miaWallace vincentVega')  // ['data-mia-wallace', 'data-vincent-vega']
 ```
 
-## management
+### domData.bridge()
+
+The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. If a host is detected at runtime, the bridge will run once automatically. Existing methods on the host are **not** overwritten unless the 2nd param is set to `true`.
+
+```js
+domData.bridge(host)       // integrate domData into host (existing methods are not overwritten)
+domData.bridge(host, true) // integrate domData into host (overwriting existing methods, if any)
+```
+
+```js
+domData.bridge(jQuery)     // integrate domData's methods into jQuery
+domData.bridge(ender)      // integrate domData's methods into ender
+```
 
 ### domData.noConflict()
 
@@ -181,20 +193,6 @@ domData.noConflict(); // simply destroys the global
 domData.noConflict(function(domData){  
   /* use domData in here */  
 });
-```
-
-### domData.bridge()
-
-The bridge handles the integration of methods into a host. If a host is detected at runtime, then the bridge will run once automatically. Existing methods on the host are not overwritten unless the 2nd parameter param is set to `true`.
-
-```js
-domData.bridge(host)        // integrate domData's methods into host (existing methods are not overwritten)
-domData.bridge(host, true)  // integrate domData's methods into host (overwriting existing methods, if any)
-```
-
-```js
-domData.bridge(jQuery)      // integrate domData's methods into jQuery
-domData.bridge(ender)       // integrate domData's methods into ender
 ```
 
 # [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
