@@ -24,7 +24,10 @@
 }('domData', function(host) {// factory:
 
     // Allow a host to be passed to the factory for use with bridge()
-    // Otherwise check for a host in the global namespace:
+	// e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
+	// added to the logic above, then domData's methods would automatically 
+	// be added to jQuery. Otherwise check for a host in the global 
+	// namespace and do the same:
     host = host || this['$'];
 
     var context = this

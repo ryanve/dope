@@ -208,11 +208,6 @@ define('domdata', domData.noConflict);
 define('domdata', function(){ return domData; });
 ```
 
-```js
-// define the module, destroy the global, and bridge methods into jQuery:
-define('domdata', ['jquery'], domData.noConflict);
-```
-
 # Compatibility
 
 Supports all major browsers (including IE6+)
