@@ -199,11 +199,18 @@ domData.noConflict(function(domData){
 # [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
 
 ```js
-define('domdata', domData.noConflict); // define the module and simultaneously destroy the global
+// define the module and simultaneously destroy the global:
+define('domdata', domData.noConflict);
 ```
 
 ```js
-define('domdata', function(){ return domData; }); // define the module and keep the global too
+// define the module and keep the global too:
+define('domdata', function(){ return domData; });
+```
+
+```js
+// define the module, destroy the global, and bridge methods into jQuery:
+define('domdata', ['jquery'], domData.noConflict);
 ```
 
 # Compatibility
