@@ -24,7 +24,7 @@
 	</style>
 	<!--code.google.com/p/html5shiv/ -->
 	<!--[if lt IE 9]>
-		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 </head>
 <body>
@@ -89,8 +89,8 @@
 			<td><code id=typeof-dataset></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('html').dataset() === domData.dataset(docElem)</code></td>
-			<td><code>true</code></td>
+			<td><code>domData(docElem).dataset() == domData.dataset(docElem)</code></td>
+			<td><code title="false in old IE is okay here (all the props still match)">true*</code></td>
 			<td><code id=dataset-object></code></td>
 		</tr>
 		<tr>
@@ -191,7 +191,7 @@
 	</script>
 	
 	<!-- github.com/ryanve/domdata  -->
-	<script src="domdata.js"></script>
+	<script src="domdata.min.js"></script>
 
 	<script>
 	(function(document, console, domData) {
@@ -211,7 +211,7 @@
 		tests['select-tags'] = domData('div').length;
 		tests['empty-length'] = domData('').length;
 		tests['typeof-dataset'] = typeof domData('html').dataset();
-		tests['dataset-object'] = domData('html').dataset() === domData.dataset(docElem);
+		tests['dataset-object'] = domData(docElem).dataset() == domData.dataset(docElem);
 		tests['in'] = 'movieName' in domData('html').dataset();
 		tests['get-movie-name'] = domData('html').dataset('movieName');
 		tests['set-director'] = domData('html').dataset('director', 'Tarantino').dataset('director');

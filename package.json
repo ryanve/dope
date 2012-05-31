@@ -4,7 +4,7 @@
     "version": "1.0.5",
     "homepage": "https://github.com/ryanve/domdata",
     "author": "Ryan Van Etten <@ryanve>",
-    "keywords": ["ender", "dataset", "data", "html5", "dom"],
+    "keywords": ["ender", "dataset", "data", "html5", "dom", "jquery", "javascript", "js"],
     "main": "./domdata.js",
     "ender": "noop",
     "repository": {

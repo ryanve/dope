@@ -10,8 +10,10 @@ The `domData()` function is a simple OO **wrapper** that works like the jQuery f
 ```js
 domData(element)       // wrap a DOM element
 domData(elementArray)  // wrap NodeList or array of DOM elements
-domData(selector)      // wrap element(s) matched by a selector string (uses querySelectorAll)
+domData(selector)      // wrap element(s) matched by a selector string
 ```
+
+The standalone `domData(selector)` syntax is only available where [querySelectorAll](https://developer.mozilla.org/en/DOM/Document.querySelectorAll) is available. `domData(tagName)` works everywhere.
 
 # Integration 
 
@@ -204,6 +206,10 @@ define('domdata', domData.noConflict); // define the module and simultaneously d
 ```js
 define('domdata', function(){ return domData; }); // define the module and keep the global too
 ```
+
+# Compatibility
+
+Supports all major browsers (including IE6+)
 
 # CDN
 

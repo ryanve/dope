@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.0.8
+ * @version     1.1.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -14,11 +14,23 @@
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
 , sub: true, white: true, indent: 4, maxerr: 50 */
 
-(function(context, doc) {
+(function(name, factory) {
+    if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
+        module.exports = factory(); // nodejs / ender.no.de
+    }
+    else {
+        this[name] = factory();     // browser
+    }
+}('domData', function(host) {// factory:
 
-    var name = 'domData'
-      , host = context['$']
+    // Allow a host to be passed to the factory for use with bridge()
+    // Otherwise check for a host in the global namespace:
+    host = host || this['$'];
+
+    var context = this
+      , name = 'domData'
       , old = context[name]
+      , doc = document
       , FN = 'fn'
       , dataset, deletes, camelize, datatize, render // locals for internal use
       , toDataSelector, camelizeAll, datatizeAll, getDataset, queryData
@@ -183,27 +195,15 @@
      * @return  {Object}                array of elements
      */
 
-    api['queryData'] = queryData = function(list, root) {
-        return queryEngine(toDataSelector(list), root); 
-    };
-
-    // VS.
-    // If we want this method to support IE7, it'd be like this:
-    /*
     api['queryData'] = supportsQSA 
         ? function(list, root) {
            return queryEngine(toDataSelector(list), root); 
         }
-        : function(list, root) {
+        : function(list, root) {// fallback (only adds .07k to include)
         
             list = datatizeAll(list); // convert keys to array of data-names
         
-            // Below is a fallback way to get elems by attr that should work 
-            // in IE7. I have no way to test IE7. In IE8 it works (although
-            // in IE8 we don't need it b/c QSA works for CSS2 selectors) 
-            // If someone can confirm or deny if it works in IE7, that'd be great.
-            // When gzipped this only adds .09k so maybe it's worth it.
-
+            // way to get elems by attr for IE7/6:
             var i, j, k, el, els, name, listLen = list.length, ret = [], alreadyAdded = [];
             if (listLen) {
                 els = queryEngine('*', root); // get all elems (getElementsByTagName)
@@ -219,7 +219,6 @@
             }
             return ret;
         };
-        */
 
     /**
      * render()         Convert a stringified primitive back to its correct type.
@@ -487,28 +486,8 @@
         return api;
 
     };//bridge
-    
-    // Server vs browser:
-    if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
-        module.exports = api; // node js
-    }
-    else {// browser
-        context[name] = api; // expose to global context
-    }
-
-    // To AMD or not AMD? Hmm...
-    // Read thru this:  github.com/ryanve/response.js/pull/9
-    // Could do it like:
-
-    //if (typeof define === 'function' && define.amd) {
-        // AMD loaders -- github.com/amdjs/amdjs-api/wiki/AMD 
-        // Do this after the global is exposed so that the global can be destroyed by 
-        // calling noConflict(). Defining the module w/o name helps prevent conflicts
-        // and lets devs decide where to load it from. e.g. require('libs/domdata.js')
-        // define(function() { return api; });
-    //}
 
     // Bridge into a host like jQuery or ender if avail
     return api['bridge'](host); //...and return the api
 
-}(this, document));
+})); // factory and closure
