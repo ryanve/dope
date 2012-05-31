@@ -8,12 +8,11 @@ domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction
 The `domData()` function is a simple OO **wrapper** that works like the jQuery function.
 
 ```js
-domData(element)       // wrap a DOM element
-domData(elementArray)  // wrap NodeList or array of DOM elements
-domData(selector)      // wrap element(s) matched by a selector string
+domData(element)       // wrap a DOM element (all browsers)
+domData(elementArray)  // wrap NodeList or array of DOM elements  (all browsers)
+domData(tagName)       // wrap element(s) matched by tag name (all browsers)
+domData(selector)      // wrap element(s) matched by a selector string (requires querySelectorAll)
 ```
-
-In standalone usage, the third syntax `domData(selector)` requires [querySelectorAll](https://developer.mozilla.org/en/DOM/Document.querySelectorAll) unless the selector is a tag name. `domData(tagName)` works everywhere.
 
 # Integration 
 
