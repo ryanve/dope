@@ -13,7 +13,7 @@ domData(elementArray)  // wrap NodeList or array of DOM elements
 domData(selector)      // wrap element(s) matched by a selector string
 ```
 
-The standalone `domData(selector)` syntax is only available where [querySelectorAll](https://developer.mozilla.org/en/DOM/Document.querySelectorAll) is available. `domData(tagName)` works everywhere.
+In standalone usage, the third syntax `domData(selector)` requires [querySelectorAll](https://developer.mozilla.org/en/DOM/Document.querySelectorAll) unless the selector is a tag name. `domData(tagName)` works everywhere.
 
 # Integration 
 
