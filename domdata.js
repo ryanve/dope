@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.1.0
+ * @version     1.2.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -14,40 +14,30 @@
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
 , sub: true, white: true, indent: 4, maxerr: 50 */
 
-(function(name, factory) {
+(function(factory) {
     if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
-        module.exports = factory(); // nodejs / ender.no.de
+        module.exports = factory();  // node / ender.no.de
+    } else {
+        this['domData'] = factory(); // browser
     }
-    else {
-        this[name] = factory();     // browser
-    }
-}('domData', function(host) {// factory:
+}(function(host) {// factory:
 
-    // Allow a host to be passed to the factory for use with bridge()
-    // e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
-    // added to the logic above, then domData's methods would automatically 
-    // be added to jQuery. Otherwise check for a host in the global 
-    // namespace and do the same:
-    host = host || this['$'];
-
-    var context = this
+    var root = this
       , name = 'domData'
-      , old = context[name]
+      , old = root[name]
+      , win = window
       , doc = document
       , FN = 'fn'
-      , dataset, deletes, camelize, datatize, render // locals for internal use
-      , toDataSelector, camelizeAll, datatizeAll, getDataset, queryData
-      , supportsDOMStringMap = typeof DOMStringMap !== 'undefined'
-      , supportsQSA = !!doc.querySelectorAll
+      , dataset, deletes, camelize, datatize, render
+      , toDataSelector, camelizeAll, datatizeAll
+      , getDataset, queryData
+      
+      , DMS = typeof DOMStringMap !== 'undefined'
+      , QSA = !!doc.querySelectorAll // caniuse.com/#feat=queryselector
 
-        /**
-         * @param {string}      s      selector string
-         * @param {Object=}     root
-         */
-      , queryEngine = supportsQSA // easy query engine:
-            // caniuse.com/#feat=queryselector
-            ? function (s, root) { return !s ? [] : (root || doc).querySelectorAll(s); }
-            : function (s, root) { return !s ? [] : (root || doc).getElementsByTagName(s); }
+      , queryEngine = QSA // Simple query engine:
+            ? function (s, root) { return s ? (root || doc).querySelectorAll(s) : []; }
+            : function (s, root) { return s ? (root || doc).getElementsByTagName(s) : []; }
 
       , regexCamels = /([a-z])([A-Z])/g          // lowercase next to uppercase
       , regexDashB4 = /-(.)/g                    // finds chars after hyphens
@@ -56,6 +46,19 @@
       , regexTrimBracks = /^[\[\s]+|[\]\s]+$/g   // trim whitespace and/or [ ] brackets
       , regexEscPeriods = /\\*\./g               // find periods w/ and w/o preceding backslashes
     ;
+    
+    // Allow a host to be passed to the factory for use with bridge()
+    // e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
+    // added to the logic at the top, then domData's methods would automatically 
+    // be added to jQuery. Otherwise we look in the root:
+    
+    host = host || (typeof root['$'] === 'function' && root['$'][FN] ? root['$'] : 0);
+    
+    // Array notation is used on property names that we don't want the
+    // Closure Compiler to rename in the advanced optimization mode. 
+    // closure-compiler.appspot.com/home
+    // developers.google.com/closure/compiler/docs/api-tutorial3
+    // developers.google.com/closure/compiler/docs/js-for-compiler
 
     /**
      * api is the export (methods are added to it)
@@ -74,43 +77,45 @@
      */
     function Api(item, root) {
         var i;
-        if ( !item) { return this; }
-        if (item.nodeType || typeof item.length !== 'number' || item.window == item) {
+        if ( !item ) { return this; }
+        if (typeof item === 'function') {
+            item.call(doc, api); // @since 1.2.0
+        } else if (item.nodeType || item === win || (i = item.length) !== +i) {
             // DOM elems/nodes or anything w/o a length number gets handled here. The window
-            // has length in it and must be checked too. Using `item.window == item` checks 
-            // this w/o leaving the local scope (must be *double* equal to be cross-browser)
+            // has length in it and must be checked too. ( jsperf.com/iswindow-prop )
             this[0] = item; 
-            this.length = 1;
-        }
-        else {// Array-like:
+            this['length'] = 1;
+        } else {// Array-like:
             if (typeof item === 'string') {
                 this['selector'] = item;
                 item = queryEngine(item, root);
+                i = item.length;
             }
-            this.length = i = item.length >>> 0; // convert anything that's not a finite number to 0
-            while (i--) {// arrayify:
+            // Ensure length is 0 or a positive finite num:
+            this['length'] = i = (i !== +i || i < 0) ? 0 : i >>> 0;
+            while (i--) {// make array-like:
                 this[i] = item[i]; 
             }
-        }
-        // implicitly returns this
+        } // implicitly returns `this`
     }
 
-    // jQueryish magic to make `api() instanceof api` be true to make it so
-    // that methods added to api[FN] map back to the prototype + vice versa:
+    // jQuery-inspired magic to make `api() instanceof api` be true and to make
+    // it so that methods added to api[FN] map back to the prototype + vice versa:
     api.prototype = api[FN] = Api.prototype = {};
     
-    // Array notation is used on property names that we don't want the
-    // Closure Compiler to rename in the advanced optimization mode. 
-    // closure-compiler.appspot.com/home
-    // developers.google.com/closure/compiler/docs/api-tutorial3
-    // developers.google.com/closure/compiler/docs/js-for-compiler
-    
-    // Defaults conform to jQuery:
+    // Defaults props:
     api[FN]['selector'] = '';
     api[FN]['length'] = 0;
+    
+    // Create top-level reference to self:
+    // This makes it possible to bridge into a host, destroy the global w/ noConflict, 
+    // and still access the entire api from the host (not just the bridged methods.)
+    // It is also useful for other modules that may want to use this module, even after 
+    // the global is gone.
+    api[name] = api;
 
     /**
-     * camelize()             Convert  'data-pulp-fiction' to 'pulpFiction'
+     * camelize()         Convert  'data-pulp-fiction' to 'pulpFiction'
      * 
      * @param   {string}  s
      * @return  {string}
@@ -122,9 +127,9 @@
             return m1.toUpperCase();
         });
     };
-    
+
     /**
-     * datatize()             Convert  'pulpFiction' to 'data-pulp-fiction'
+     * datatize()         Convert  'pulpFiction' to 'data-pulp-fiction'
      * 
      * @param   {string}  s
      * @return  {string}
@@ -140,9 +145,9 @@
     function makeMapper(callback) {
         return function(list) {
             var i, v, ret = [];
-            list = typeof list === 'string' ? list.split(regexCsvOrSsv) : list;
+            list instanceof Array || (list = list.split(regexCsvOrSsv));
             for (i = 0 ; i < list.length; i++) {
-                if (i in list && (v = list[i])) {
+                if (v = list[i]) {
                     v = callback(v.replace(regexTrimBracks, ''));
                     if (v) { ret.push(v); } // exclude falsey values
                 }
@@ -198,7 +203,7 @@
      * @return  {Object}                array of elements
      */
 
-    api['queryData'] = supportsQSA 
+    api['queryData'] = QSA 
         ? function(list, root) {
            return queryEngine(toDataSelector(list), root); 
         }
@@ -231,13 +236,13 @@
 
     api['render'] = render = function(s) {
         var n; // <= undefined
-        return (!s || typeof s !== 'string' ? s              // unchanged
-                        : 'true' === s      ? true           // convert "true" to true
-                        : 'false' === s     ? false          // convert "false" to false
-                        : 'undefined' === s ? n              // convert "undefined" to undefined
-                        : 'null' === s      ? null           // convert "null" to null
-                        : isFinite((n = parseFloat(s))) ? n  // convert "1000" to 1000
-                        : s                                  // unchanged
+        return (!s || typeof s !== 'string' ? s           // unchanged
+                        : 'true' === s      ? true        // convert "true" to true
+                        : 'false' === s     ? false       // convert "false" to false
+                        : 'undefined' === s ? n           // convert "undefined" to undefined
+                        : 'null' === s      ? null        // convert "null" to null
+                        : (n = parseFloat(s)) === +n ? n  // convert "1000" to 1000
+                        : s                               // unchanged
         );
     };
 
@@ -253,7 +258,7 @@
         if ( !el || el.nodeType !== 1) { return obj; } // undefined
         
         // Use the native dataset when available:
-        if (supportsDOMStringMap && (obj = el.dataset) && typeof obj === 'object') {
+        if (DMS && (obj = el.dataset) && typeof obj === 'object') {
            return obj;
         }
 
@@ -305,8 +310,7 @@
                 if ( !key) {
                     return numOfArgs > 2 ? elems : ret; 
                 }
-            }
-            else if ( !(key instanceof String) ) {
+            } else if ( !(key instanceof String) ) {
                 // HANDLE: $.data(elem, object)
                 for (n in key) {
                     if (key.hasOwnProperty(n)) {
@@ -395,35 +399,9 @@
     api[FN]['deletes'] = function(keys) {
         return deletes(this, keys);
     };
-    
-    //api[FN]['getDataset'] = function() {
-    //   return getDataset(this);
-    //};
-    
-    //api[FN]['setDataAttr'] = function(key, value) {
-    //   return 1 in arguments ? dataset(this, key, value) : dataset(this, key);
-    //};
-    
-    //api[FN]['getDataAttr'] = function(key) {
-    //    return dataset(this, key);
-    //};
-    
-    // Expose queryEngine for convenience.
+
+    // Expose queryEngine so that other modules can use it.
     api['qsa'] = queryEngine;
-    
-    // We could offer ability to add a query engine but leaving 
-    // it out at least for now in favor of host integration:
-    /* 
-    api['setQueryEngine'] = function(engine) {
-        if (typeof engine === 'function') { 
-            queryEngine = engine; 
-        }
-        else {
-            throw 'engine must be function';
-        }
-        return api;
-    };
-    */
 
     /**
      * noConflict()  Destroy the global and return the api. Optionally call 
@@ -433,12 +411,28 @@
      * @example      domData.noConflict(function(domData){    });
      */
     api['noConflict'] = function(callback) {
-        context[name] = old;
-        if (typeof callback === 'function') { 
-            callback(api); 
-        }
+        root[name] = old;
+        typeof callback === 'function' && callback.call(root, api);
         return api;
     };
+
+    /**
+     * Special-case (internal) utility for augmenting a host with the api's methods.
+     * See usage from bridge()
+     * @param {Object|function(...)}    supplier   is the source of the methods
+     * @param {Object|function(...)}    receiver   is the host OR a prop on the host to add methods to
+     * @param {boolean=}                force      whether or not existing methods should be overwritten
+     */
+    function mixout(supplier, receiver, force) {// < signature is reverse of mixin
+        var name;
+        for (name in supplier) {
+            supplier.hasOwnProperty(name)
+            && (force || typeof receiver[name] === 'undefined')
+            && typeof supplier[name] === 'function' && 0 !== mixout[name]
+            && (receiver[name] = supplier[name]);
+        }
+    }// Methods that *never* mixout:
+    mixout['bridge'] = mixout['noConflict'] = mixout['qsa'] = 0;
 
     /**
      * bridge()       Handler for integrating (mixing out) methods into a host. It
@@ -450,47 +444,17 @@
      * @param {Object|function()}   host    any object or function
      * @param {boolean=}            force   indicates whether existing methods on the host 
      *                                      should be overwritten (default: false)
+     * @param {number=}             flag    1: top-level only, 2: effins only
      */
-    api['bridge'] = function(host, force) {// we could add whitelist functionality to this
-
-        var j, a, m;
-        
-        if (host) {
-        
-            a = [ 'dataset'
-                , 'deletes'
-                , 'render'
-                , 'camelize'
-                , 'datatize'
-                , 'datatizeAll'
-                , 'camelizeAll'
-                , 'queryData'
-                , 'toDataSelector' 
-                ];
-
-            j = 9; // a.length;
-
-            while (j--) {
-                m = a[j]; // method name
-                // don't overwrite existing methods unless forced
-                host[m] = force ? api[m] : host[m] || api[m];
-                if ( force || !host[m] ) { host[m] = api[m]; }
-            }
-
-            if (typeof host === 'function' && host[FN]) {
-                while (j < 2) {// merge dataset/deletes into the host chain
-                    m = a[j++];  // method name
-                    // don't overwrite existing methods unless forced
-                    if ( force || !host[FN][m] ) { host[FN][m] = api[FN][m]; }
-                }
-            }
+    api['bridge'] = function (host, force, flag) {
+        if (host instanceof Object) {
+            2 !== flag && mixout(api, host, force); // top-level
+            1 !== flag && typeof host === 'function' && host[FN] && mixout(api[FN], host[FN], force);
         }
-
         return api;
-
-    };//bridge
-
-    // Bridge into a host like jQuery or ender if avail
-    return api['bridge'](host); //...and return the api
+    };
+    
+    // Bridge into a host like jQuery or ender if one is there:
+    return api['bridge'](host);
 
 })); // factory and closure

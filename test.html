@@ -36,7 +36,7 @@
 	<pre id=ua></pre>
 	<pre><code><strong>var</strong> docElem = document.documentElement; <small>// html element</small></code></pre>
 	
-	<!-- In the DOM all 3 test divs should have `data-mia-wallace` and `data-vincent-vega`: -->
+	<!-- In the DOM all 3 test divs should have `data-vincent-vega` and `data-mia-wallace`: -->
   	<!-- They should NOT have `data-butch-coolidge` or `data-jules-winnfield`: -->
 	<div class="test"></div>
 	<div class="test"></div>
@@ -243,13 +243,16 @@
 		}
 
 		if (console && typeof console.log === 'function') {// use console.log in here:
+			domData.bridge($);
 			if ([].forEach && Object.keys) {
 				Object.keys(domData).forEach(function(v){
 					props[v] = domData[v];
 				});
 			}
 			console.log(props); // top-level props
-			console.log(domData.prototype);
+			domData(function(d){ console.log([this === document, d === domData, d() instanceof domData]); });
+			console.log([domData.fn === domData.prototype, domData.domData === domData, domData() instanceof domData])
+			
 		}
 
 	}(this.document, this.console, this.domData));
