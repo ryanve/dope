@@ -39,7 +39,6 @@
       , regexDataPrefix = /^data-(.+)$/          // starts with data-
       , regexCsvOrSsv = /\s*[\s\,]+\s*/          // splitter for comma *or* space-separated values
       , regexCleanKey = /^[\[\s]+(data-)?|\s+|[\]\s]+$/g  // replace whitespace, trim [] brackets, trim prefix
-      , regexTrimSpace = /^\s+|\s+$/g            // trim whitespace 
       , regexEscPeriods = /\\*\./g               // find periods w/ and w/o preceding backslashes
     ;
     
