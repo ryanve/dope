@@ -163,6 +163,11 @@
 			<td><code>4</code></td>
 			<td><code id=query-data-multi></code></td>
 		</tr>
+		<tr>
+			<td><code><strong>typeof</strong> domData('html').data('dne')</code></td>
+			<td><code>undefined</code></td>
+			<td><code id=dne></code></td>
+		</tr>
 	</table>
 	
 	<footer id="footer">
@@ -191,7 +196,7 @@
 	</script>
 	
 	<!-- github.com/ryanve/domdata  -->
-	<script src="domdata.min.js"></script>
+	<script src="domdata.js"></script>
 
 	<script>
 	(function(document, console, domData) {
@@ -220,6 +225,7 @@
 		tests['get-year-exact'] = 1994 === domData('html').dataset(['year']);
 		tests['render-true'] = true === domData.render('true');
 		tests['deletes'] = domData.deletes(docElem, 'genre producer').tagName;
+		tests['dne'] = domData('html').dataset('dne');
 
 		// set 4 via object, then delete 2 of them, then access 1 of the non-deleted ones:
 		tests['set-multi'] = domData('div').dataset({ 
@@ -243,6 +249,7 @@
 		}
 
 		if (console && typeof console.log === 'function') {// use console.log in here:
+			console.log($.datatizeAll('a  b,, cD'));
 			domData.bridge($);
 			if ([].forEach && Object.keys) {
 				Object.keys(domData).forEach(function(v){

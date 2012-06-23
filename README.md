@@ -210,7 +210,7 @@ define('domdata', function(){ return domData; });
 
 # Compatibility
 
-Supports all major browsers (including IE6+)
+Supports all major browsers. Tested in Chrome / FF3+ / IE6+ / Opera / Safari
 
 # CDN
 
