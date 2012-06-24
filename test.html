@@ -203,7 +203,9 @@
 		// $.fn = $.fn || {};
 	</script>
 	
-	<script src="http://airve.github.com/js/elo/elo.min.js"></script>
+	<!-- 
+	  <script src="http://airve.github.com/js/elo/elo.min.js"></script>
+	-->
 	<script src="domdata.js"></script><!-- github.com/ryanve/domdata  -->
 
 	<script>
@@ -262,7 +264,7 @@
 		}
 
 		if (console && typeof console.log === 'function') {// use console.log in here:
-			console.log($.datatizeAll('a  b,, cD'));
+			console.log($.mapFilter($.toArray('a  b,, cD'), $.datatize));
 			//domData.bridge($);
 			if ([].forEach && Object.keys) {
 				Object.keys(domData).forEach(function(v){
@@ -275,7 +277,7 @@
 			console.log(props); // top-level props
 			console.log(hostProps); // integrated
 			domData(function(d){ console.log([this === document, d === domData, d() instanceof domData]); });
-			console.log([domData.fn === domData.prototype, domData.domData === domData, domData() instanceof domData])
+			console.log([domData.fn === domData.prototype, domData.domData === domData, domData() instanceof domData]);
 			
 		}
 

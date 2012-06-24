@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.3.1
+ * @version     1.4.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -26,6 +26,7 @@
       , win = window
       , doc = document
       , FN = 'fn' // inlined @ minification
+      , slice = [].slice
 
       , DMS = typeof DOMStringMap !== 'undefined'
       , QSA = !!doc.querySelectorAll // caniuse.com/#feat=queryselector
@@ -157,54 +158,57 @@
     }
 
     /**
-     * Special (internal) iterator that filters undefined|null values from an array,
-     * maps the remaining values, and the filters the result --- all in one loop.
-     * @param  {Object|Array|string|number|*}  list  is a key|Array|CSV/SSV string
-     * @param  {function(...)}                 fn    is the function to call on each value
+     * Ensure that the data you are dealing w/ is an array. 
+     * arrays => return the same array unchanged
+     * null|undefined|''|whitespace|',,' => return []
+     * strings => split CSV or SSV values
+     * function|number|boolean|regexp => wrap in array
+     * objects => arrayify if array-like, otherwise wrap in array
+     * @param  {*} list
      * @return {Array}
      */
-    function mapClean(list, fn) {
-        var l, i = 0, v, ret = [];
-        if ( typeof list === 'string' ) {
-            list = list.split(regexCsvOrSsv);
-            if ( !list[0] && 1 === list.length ) { // ['']
-                return ret; // list was '' or pure whitespace/commas
-            }
-        } else if (typeof list === 'number') {
-            // allow numbers b/c keys can be numeric
-            return (list = fn(list)) ? [list] : ret;
+    function toArray(list) {
+        if ( list == null ) { return []; }
+		if ( typeof list === 'string' ) {
+            list = list.split(regexCsvOrSsv); // '' or pure whitespace/commas splits to ['']
+            return list[0] || 1 !== list.length ? list : []; // if [''] then return []
         }
-        for (l = list.length; i < l; i++) {
-            // null|undefined vals get bypassed w/o even calling the `fn`
-            // other vals get the `fn` called on them and are then pushed if truthy
-            list[i] != null && (v = fn(list[i])) && ret.push(v);
+        if ( typeof list === 'object' ) {
+            if ( list instanceof Array ) { return list; } // unchanged
+            return list.length === +list.length && list !== win ? slice.call(list) : [list];
         }
-        return ret;
-    }
-    
-    /**
-     * camelizeAll()
-     * 
-     * @param   {Object|Array|string|number|*} list
-     * @return  {Array}    array of camelized names
-     */
-    function camelizeAll(list) {
-        return mapClean(list, camelize);
+        return [list]; // functions / numbers / booleans
     }
 
     /**
-     * datatizeAll()
-     * 
+     * Map an array (or array-like object) and then compact the result. 
+     * Both operations are combined into one loop.
+     * @param  {Object|Array|*}  list
+     * @param  {function(...)}   fn
+     * @param  {(Object|*)=}     scope   thisArg
+     * @return {Array}
+     */
+    function mapFilter(list, fn, scope) {
+        var l, i = 0, v, ret = [];
+        if (list == null) { return ret; }
+        for (l = list.length; i < l; i++) {
+            i in list && (v = fn.call(scope, list[i], i, list)) && ret.push(v);
+        }
+        return ret;
+    }
+
+    /**
+     * datatizeAll()   (internal only @since 1.4.0)
+     * inlined @ minification
      * @param   {Object|Array|string|number|*}  list
      * @return  {Array}     array of datatized names
      */
     function datatizeAll(list) {
-        return mapClean(list, datatize);
+        return mapFilter(toArray(list), datatize);
     }
 
     /**
      * render()         Convert a stringified primitive back to its correct type.
-     * 
      * @param {string|*} s
      */
     function render(s) {
@@ -212,9 +216,9 @@
         return (!s || typeof s !== 'string' ? s           // unchanged
                         : 'true' === s      ? true        // convert "true" to true
                         : 'false' === s     ? false       // convert "false" to false
-                        : 'undefined' === s ? n           // convert "undefined" to undefined
                         : 'null' === s      ? null        // convert "null" to null
-                        : (n = parseFloat(s)) === +n ? n  // convert "1000" to 1000
+                        : 'undefined' === s ? n           // convert "undefined" to undefined
+                        : isFinite(n = parseFloat(s)) ? n // convert "1000" to 1000
                         : s                               // unchanged
         );
     }
@@ -226,7 +230,7 @@
      * @return {Object|undefined}
      */
     function getDataset(el) {
-    
+
         var i, a, n, ob;
         if ( !el || 1 !== el.nodeType ) { return ob; } // undefined
         
@@ -438,8 +442,8 @@
         els = queryEngine('*', root); // getElementsByTagName
         for (j = 0; j < els.length; j++) {// each elem
             for (i = 0; i < list.length && !alreadyAdded[j]; i++) {// each attr name
-                // `list` was already compacted by datatizeAll() so
-                // we know that `list[i]` will be a truthy string:
+                // `list` was already compacted by so we know
+                // that `list[i]` will be a truthy string:
                 if (els[j].getAttribute(list[i]) != null) {
                     alreadyAdded[j] = ret.push(els[j]); // push returns truthy
                 }
@@ -456,8 +460,8 @@
     api['deletes'] = deletes;
     api['camelize'] = camelize;
     api['datatize'] = datatize;
-    api['camelizeAll'] = camelizeAll;
-    api['datatizeAll'] = datatizeAll;
+    api['toArray'] = toArray;
+    api['mapFilter'] = mapFilter;
     api['toDataSelector'] = toDataSelector;
     
     /**
