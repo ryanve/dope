@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.3.0
+ * @version     1.3.1
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -25,8 +25,8 @@
       , old = root[name]
       , win = window
       , doc = document
-      , FN = 'fn'
-      
+      , FN = 'fn' // inlined @ minification
+
       , DMS = typeof DOMStringMap !== 'undefined'
       , QSA = !!doc.querySelectorAll // caniuse.com/#feat=queryselector
 
@@ -45,9 +45,16 @@
     // Allow a host to be passed to the factory for use with bridge()
     // e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
     // added to the logic at the top, then domData's methods would automatically 
-    // be added to jQuery. Otherwise we look in the root:
+    // be added to jQuery. Otherwise we look in the root. A host is not req'd,
+    // but if one is found, we autmatically integrate into it:
 
-    host = host || (typeof root['$'] === 'function' && root['$'][FN] ? root['$'] : 0);
+    // could to this:
+    // `ender` will pass the `$` checks below too but we put it as a backup in case `$` has been 
+    // reclaimed and/or noConflict has been called. (ender.no.de is designed for integration)
+    // host = host || root[typeof $ === 'function' && $[FN] === $.prototype ? '$' : 'ender'];
+
+    // but this is more definitive and easier to explain in the docs:
+    host = host || root['ender'] || root['jQuery'];
 
     // Array notation is used on property names that we don't want the
     // Closure Compiler to rename in the advanced optimization mode. 
@@ -292,7 +299,8 @@
             
             if ( key = datatize(key) ) {
                 // SET (simple)
-                el.setAttribute && el.setAttribute(key, val);
+                // Normalize `val` to a string (needed to read null|undefined in IE7)
+                el.setAttribute && el.setAttribute(key, '' + val);
                 return el;
             }
         }
@@ -312,10 +320,12 @@
             if ( ob.hasOwnProperty(n) && (key = datatize(n)) ) {
                 if ( isCollection ) {
                     for (i = 0; i < el.length; i++) {// `i` must reset to 0 for each outer iteration
-                        el[i] && el[i].setAttribute && el[i].setAttribute(key, ob[n]);
+                        // Normalize value to a string (needed to read null|undefined in IE7)
+                        el[i] && el[i].setAttribute && el[i].setAttribute(key, '' + ob[n]);
                     }
                 } else if (el.setAttribute) {
-                    el.setAttribute(key, ob[n]);
+                    // Normalize value to a string (needed to read null|undefined in IE7)
+                    el.setAttribute(key, '' + ob[n]);
                 }
             }
         }
@@ -343,6 +353,7 @@
         // HANDLE "set" for each elem in the collection right here, so we don't have to
         // run thru the key logic each time --- it saves several function calls this way:
         if (key = datatize(key)) {
+            val = '' + val; // normalize `val` to a string (needed to read null|undefined in IE7)
             for (l = this.length; i < l; i++) {
                 // Iterate thru the the elems, setting data on each of them.
                 if (this[i] && this[i].setAttribute) {// Only set data on truthy items:

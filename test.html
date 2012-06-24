@@ -1,4 +1,5 @@
 <!doctype html>
+<!doctype html>
 <html class="solarized" lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
 <head>
 	<meta charset=utf-8>
@@ -22,10 +23,17 @@
 	nav ul li a:hover{color:#ffe;background:#b58900}
 	[accesskey=z]{visibility:hidden;width:0;height:0}
 	</style>
-	<!--code.google.com/p/html5shiv/ -->
-	<!--[if lt IE 9]>
-		<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+
+	<!--code.google.com/p/html5shiv/
+	    The src URI must include a scheme for offline testing to work in old IE: 
+	--><!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+	
+	<!-- Test hosts:
+	     http://airve.github.com/js/jeesh/jeesh.min.js
+	-->
+	<script src="http://airve.github.com/js/jeesh/jeesh.min.js"></script>
 </head>
 <body>
 	
@@ -191,17 +199,17 @@
 
 	<script>
 		// Make a dummy fn object to test that domData.bridge() works:
-		this.$ = this.$ || function() {};
-		$.fn = $.fn || {};
+		// this.$ = this.$ || function() {};
+		// $.fn = $.fn || {};
 	</script>
 	
-	<!-- github.com/ryanve/domdata  -->
-	<script src="domdata.js"></script>
+	<script src="http://airve.github.com/js/elo/elo.min.js"></script>
+	<script src="domdata.js"></script><!-- github.com/ryanve/domdata  -->
 
 	<script>
 	(function(document, console, domData) {
 
-		var n, props = {}, tests = {}
+		var n, props = {}, tests = {}, hostProps = {}
 		  , docElem = document.documentElement;
 
 		// user agent string:
@@ -227,6 +235,11 @@
 		tests['deletes'] = domData.deletes(docElem, 'genre producer').tagName;
 		tests['dne'] = domData('html').dataset('dne');
 
+		// IE7
+		// alert (typeof domData('html').dataset('n', null).dataset('n'));
+		// document.body.setAttribute('n', null);
+		// alert (typeof document.body.getAttribute('n'));
+
 		// set 4 via object, then delete 2 of them, then access 1 of the non-deleted ones:
 		tests['set-multi'] = domData('div').dataset({ 
 		  	 vincentVega: 'John Travolta'
@@ -250,13 +263,17 @@
 
 		if (console && typeof console.log === 'function') {// use console.log in here:
 			console.log($.datatizeAll('a  b,, cD'));
-			domData.bridge($);
+			//domData.bridge($);
 			if ([].forEach && Object.keys) {
 				Object.keys(domData).forEach(function(v){
 					props[v] = domData[v];
 				});
+				Object.keys($).forEach(function(v){
+					hostProps [v] = $[v];
+				});
 			}
 			console.log(props); // top-level props
+			console.log(hostProps); // integrated
 			domData(function(d){ console.log([this === document, d === domData, d() instanceof domData]); });
 			console.log([domData.fn === domData.prototype, domData.domData === domData, domData() instanceof domData])
 			

@@ -14,6 +14,15 @@ domData(tagName)       // wrap element(s) matched by tag name (all browsers)
 domData(selector)      // wrap element(s) matched by a selector string (requires querySelectorAll)
 ```
 
+It can also be used to create a closure:
+
+```js
+domData(function($) {
+	// use `$` as safe alias for `domData` in here
+	// `this === document` in here
+});
+```
+
 # Integration 
 
 When used **standalone**, domData's methods are accessible via the `domData` variable. It can be aliased in a closure like this:
@@ -25,7 +34,7 @@ When used **standalone**, domData's methods are accessible via the `domData` var
 }(domData));
 ```
 
-When used alongside a **host** lib like [jQuery](http://jquery.com/), domData's methods are also automatically integrated into the host:
+When used alongside a **host** lib like [jQuery](http://jquery.com/) (see bridge**()**) domData's methods are also automatically integrated into the host:
 
 ```js
 (function($) {
@@ -170,16 +179,11 @@ $.datatizeAll('miaWallace vincentVega')  // ['data-mia-wallace', 'data-vincent-v
 
 ### domData.bridge()
 
-The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. If a host is detected at runtime, the bridge will run once automatically. Existing methods on the host are **not** overwritten unless the 2nd param is set to `true`.
+The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. domData automatically augments [ender](http://ender.no.de) or [jQuery](http://jquery.com) at runtime if available. To integrate into other jQuery-compatible hosts, the bridge can be called manually as demonstrated below:
 
 ```js
-domData.bridge(host)       // integrate domData into host (existing methods are not overwritten)
-domData.bridge(host, true) // integrate domData into host (overwriting existing methods, if any)
-```
-
-```js
-domData.bridge(jQuery)     // integrate domData's methods into jQuery
-domData.bridge(ender)      // integrate domData's methods into ender
+domData.bridge($)       // integrate domData into $ (existing methods are not overwritten)
+domData.bridge($, true) // integrate domData into $ (overwriting existing methods, if any)
 ```
 
 ### domData.noConflict()
@@ -210,7 +214,7 @@ define('domdata', function(){ return domData; });
 
 # Compatibility
 
-Supports all major browsers. Tested in Chrome / FF3+ / IE6+ / Opera / Safari
+Supports all major browsers. (Tested in Chrome / FF3+ / IE7+ / Opera / Safari)
 
 # CDN
 

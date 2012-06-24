@@ -1,7 +1,7 @@
 {
     "name": "domdata",
-    "description": "HTML5 dataset API",
-    "version": "1.3.0",
+    "description": "Cross-browser HTML5 dataset API",
+    "version": "1.3.1",
     "homepage": "https://github.com/ryanve/domdata",
     "author": "Ryan Van Etten <@ryanve>",
     "keywords": ["ender", "dataset", "data", "html5", "dom", "jquery", "javascript", "js"],
