@@ -1,7 +1,21 @@
 # CHANGELOG | [current](https://github.com/ryanve/domdata/blob/master/domdata.js)
 
-## [1.4.0] (2012-06-24)
-- Replaced rare usage `domData.camelizeAll()`/`domData.datatizeAll()` methods with broader usage utilities to do the same thing: `domData.toArray()` and `domData.mapFilter()`. Instead of `domData.camelizeAll(list)`, use `domData.mapFilter(domData.toArray(list), domData.camelize)`. Instead of `domData.datatizeAll(list)`, use `domData.mapFilter(domData.toArray(list), domData.datatize)`. Use `domData.toDataSelector(list)` for building selector strings.
+## [1.4.0](https://github.com/ryanve/domdata/commit/49b381e43273e93de117c107a58c2ba49c1b16f1) (2012-06-24)
+Replaced rare usage `domData.camelizeAll()`/`domData.datatizeAll()` methods with broader usage utilities to do the same thing: `domData.toArray()` and `domData.mapFilter()`. Instead of:
+
+```js
+domData.camelizeAll(list);
+domData.datatizeAll(list);
+```
+
+use: 
+
+```js
+domData.mapFilter(domData.toArray(list), domData.camelize); 
+domData.mapFilter(domData.toArray(list), domData.datatize);
+```
+
+Use `domData.toDataSelector(list)` for building selector strings.
 
 ## [1.3.0](https://github.com/ryanve/domdata/commit/aae50d8c0d9e78b19d3dcaf588f8f33658171c9d) (2012-06-23)
 - Improved regexps, added number support to camelize/datatize to allow for numeric keys b/c `data-0="totally valid"`

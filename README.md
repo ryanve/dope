@@ -1,4 +1,4 @@
-[domData](http://github.com/ryanve/domdata)
+[domData](http://github.com/ryanve/domdata) (v [1.4.0](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md))
 =======
 
 domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/domdata/domdata.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
@@ -122,18 +122,39 @@ $.render(str)        // convert stringified primitives to correct value, e.g. "t
 ```
 
 ```js
+$.render('yo')      // 'yo'
 $.render('10')      // 10
 $.render('true')    // true
+$.render('null')    // null
 ```
 
 ### $.toDataSelector()
 
 ```js
-$.toDataSelector(keys)   // convert an array (or CSV or SSV string) of data keys into a selector string
+$.toDataSelector(keys)  // convert an array (or CSV or SSV string) of data keys into a selector string
 ```
 
 ```js
 $.toDataSelector('a b cD')  // "[data-a],[data-b],[data-c-d]"
+```
+
+### $.toArray(item)
+
+- arrays => return the same array unchanged
+- null|undefined|''|whitespace|',,' => return []
+- non-empty strings => split CSV or SSV values
+- function|number|boolean|regexp|window => wrap in array
+- other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
+
+```js
+$.toArray('a b, c')  // ["a", "b", "c"]
+$.toArray([0, 1, 2]) // [0, 1, 2]
+$.toArray(true)      // [true]
+$.toArray(0)         // [0]
+$.toArray(null)      // []
+$.toArray('  ')      // []
+$.toArray('')        // []
+$.toArray()          // []
 ```
 
 ### $.camelize()
@@ -157,24 +178,13 @@ $.datatize(str)       // convert a camelized string into a lowercase dashed data
 $.datatize('miaWallace')  // data-mia-wallace
 ```
 
-### $.camelizeAll()
+### $.mapFilter(arr, callback [, scope])
+
+Map an array (or arr-like object) with a callback and "compact" the result
+@link [jsperf.com/mapfilter](http://jsperf.com/mapfilter)
 
 ```js
-$.camelizeAll(list)  // camelize values from an array (or CSV or SSV string) and return compact array
-```
-
-```js
-$.camelizeAll('data-mia-wallace data-vincent-vega')  // ['miaWallace', 'vincentVega']
-```
-
-### $.datatizeAll()
-
-```js
-$.datatizeAll(list)  // datatize values from an array (or CSV or SSV string) and return compact array
-```
-
-```js
-$.datatizeAll('miaWallace vincentVega')  // ['data-mia-wallace', 'data-vincent-vega']
+$.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // [1]
 ```
 
 ### domData.bridge()

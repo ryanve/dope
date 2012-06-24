@@ -169,7 +169,7 @@
      */
     function toArray(list) {
         if ( list == null ) { return []; }
-		if ( typeof list === 'string' ) {
+        if ( typeof list === 'string' ) {
             list = list.split(regexCsvOrSsv); // '' or pure whitespace/commas splits to ['']
             return list[0] || 1 !== list.length ? list : []; // if [''] then return []
         }
