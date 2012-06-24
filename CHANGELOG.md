@@ -1,5 +1,8 @@
 # CHANGELOG | [current](https://github.com/ryanve/domdata/blob/master/domdata.js)
 
+## [1.4.1](https://github.com/ryanve/domdata/commit/629a0931e97ac7c5b2b7f84b9186aa1ca2b5096d) (2012-06-24)
+- Made it so that `domData.render()` can properly render `NaN` and `Infinity`.
+
 ## [1.4.0](https://github.com/ryanve/domdata/commit/49b381e43273e93de117c107a58c2ba49c1b16f1) (2012-06-24)
 Replaced rare usage `domData.camelizeAll()`/`domData.datatizeAll()` methods with broader usage utilities to do the same thing: `domData.toArray()` and `domData.mapFilter()`. Instead of:
 
