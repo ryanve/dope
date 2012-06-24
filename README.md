@@ -115,18 +115,6 @@ $.queryData(keys)         // get elements by data key (keys can be an array or C
 $.queryData('miaWallace vincentVega')  // Delegate to $("[data-mia-wallace],[data-vincent-vega]")
 ```
 
-### $.render()
-
-```js
-$.render(str)        // convert stringified primitives to correct value, e.g. "true" to true 
-```
-
-```js
-$.render('yo')      // 'yo'
-$.render('10')      // 10
-$.render('true')    // true
-$.render('null')    // null
-```
 
 ### $.toDataSelector()
 
@@ -141,11 +129,11 @@ $.toDataSelector('a b cD')  // "[data-a],[data-b],[data-c-d]"
 ### $.toArray(item)
 
 ```
-// arrays => return the same array unchanged
-// null|undefined|''|whitespace|',,' => return []
-// non-empty strings => split CSV or SSV values
-// function|number|boolean|regexp|window => wrap in array
-// other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
+* arrays => return the same array unchanged
+* null|undefined|''|whitespace|',,' => return []
+* non-empty strings => split CSV or SSV values
+* function|number|boolean|regexp|window => wrap in array
+* other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
 ```
 
 ```js
@@ -157,6 +145,28 @@ $.toArray(null)      // []
 $.toArray('  ')      // []
 $.toArray('')        // []
 $.toArray()          // []
+```
+
+### $.mapFilter(arr, callback [, scope])
+
+Map an array (or arr-like object) with a callback and "compact" the result
+@link [jsperf.com/mapfilter](http://jsperf.com/mapfilter)
+
+```js
+$.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // [1]
+```
+
+### $.render()
+
+```js
+$.render(str)        // convert stringified primitives to correct value, e.g. "true" to true 
+```
+
+```js
+$.render('yo')      // 'yo'
+$.render('10')      // 10
+$.render('true')    // true
+$.render('null')    // null
 ```
 
 ### $.camelize()
@@ -178,15 +188,6 @@ $.datatize(str)       // convert a camelized string into a lowercase dashed data
 
 ```js
 $.datatize('miaWallace')  // data-mia-wallace
-```
-
-### $.mapFilter(arr, callback [, scope])
-
-Map an array (or arr-like object) with a callback and "compact" the result
-@link [jsperf.com/mapfilter](http://jsperf.com/mapfilter)
-
-```js
-$.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // [1]
 ```
 
 ### domData.bridge()
