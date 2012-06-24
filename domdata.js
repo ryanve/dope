@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/domdata
  * @license     MIT
- * @version     1.4.0
+ * @version     1.4.1
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -212,14 +212,23 @@
      * @param {string|*} s
      */
     function render(s) {
-        var n; // <= undefined
-        return (!s || typeof s !== 'string' ? s           // unchanged
-                        : 'true' === s      ? true        // convert "true" to true
-                        : 'false' === s     ? false       // convert "false" to false
-                        : 'null' === s      ? null        // convert "null" to null
-                        : 'undefined' === s ? n           // convert "undefined" to undefined
-                        : isFinite(n = parseFloat(s)) ? n // convert "1000" to 1000
-                        : s                               // unchanged
+        var n; // <= initially undefined
+        return (!s || typeof s !== 'string' ? s  // unchanged
+
+            : 'true' === s      ? true     // convert "true" to true
+            : 'false' === s     ? false    // convert "false" to false
+            : 'null' === s      ? null     // convert "null" to null
+            : 'undefined' === s ? n        // convert "undefined" to undefined			
+
+			// Convert numeric strings to numbers:
+			// "10" to 10
+			// "Infinity" to Infinity
+			// "NaN" to NaN
+			// The `=== +` comparison enables Infinities to work.
+			// The NaN part works b/c parseFloat("NaN") *is* NaN
+			: (n = parseFloat(s)) === +n || "NaN" === s ? n
+
+            : s // otherwise unchanged (it was a string other than anything above)
         );
     }
 

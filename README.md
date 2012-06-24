@@ -1,4 +1,4 @@
-[domData](http://github.com/ryanve/domdata) - [1.4.0](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md)
+[domData](http://github.com/ryanve/domdata) - [1.4](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md)
 =======
 
 domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/domdata/domdata.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
@@ -147,9 +147,13 @@ $.toArray('')        // []
 $.toArray()          // []
 ```
 
-### $.mapFilter(arr, callback [, scope])
+### $.mapFilter()
 
-Map an array (or arr-like object) with a callback and "compact" the result
+Map an array (or arr-like object) with a callback and "compact" the result:
+
+```js
+$.mapFilter(arr, callback [, scope])
+```
 
 @link [jsperf.com/mapfilter](http://jsperf.com/mapfilter)
 
@@ -160,14 +164,17 @@ $.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // 
 ### $.render()
 
 ```js
-$.render(str)        // convert stringified primitives to correct value, e.g. "true" to true 
+$.render(str) // Convert stringified primitives to correct value. (Non-strings are unchanged.)
 ```
 
 ```js
-$.render('yo')      // 'yo'
-$.render('10')      // 10
-$.render('true')    // true
-$.render('null')    // null
+$.render('yo')        // 'yo'
+$.render('10')        // 10
+$.render('true')      // true
+$.render('null')      // null
+$.render('undefined') // undefined
+$.render('Infinity')  // Infinity
+$.render('NaN')       // NaN
 ```
 
 ### $.camelize()
@@ -179,6 +186,7 @@ $.camelize(str)       // convert a dashed data- string into camelCase
 ```js
 $.camelize('data-mia-wallace')  // 'miaWallace'
 $.camelize('mia-wallace')       // 'miaWallace'
+$.camelize(47)                  // '47'
 ```
 
 ### $.datatize()
@@ -188,7 +196,12 @@ $.datatize(str)       // convert a camelized string into a lowercase dashed data
 ```
 
 ```js
-$.datatize('miaWallace')  // data-mia-wallace
+$.datatize('miaWallace')  // 'data-mia-wallace'
+$.datatize(47)            // 'data-47'
+$.datatize(0)             // 'data-0'
+$.datatize(null)          // ''
+$.datatize('')            // ''
+$.datatize(undefined)     // ''
 ```
 
 ### domData.bridge()

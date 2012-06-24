@@ -137,6 +137,16 @@
 			<td><code id=render-true></code></td>
 		</tr>
 		<tr>
+			<td><code><span class=cyan>'number'</span> === typeof domData.render('NaN')</code></td>
+			<td><code>true</code></td>
+			<td><code id=render-num></code></td>
+		</tr>
+		<tr>
+			<td><code><span class=red>Infinity</span> === domData.render('Infinity')</code></td>
+			<td><code>true</code></td>
+			<td><code id=render-inf></code></td>
+		</tr>
+		<tr>
 			<td><code>domData.deletes(docElem, 'genre producer').tagName</code></td>
 			<td><code>HTML</code></td>
 			<td><code id=deletes></code></td>
@@ -234,6 +244,8 @@
 		tests['get-year'] = '1994' === domData('html').dataset('year');
 		tests['get-year-exact'] = 1994 === domData('html').dataset(['year']);
 		tests['render-true'] = true === domData.render('true');
+		tests['render-num'] = 'number' === typeof domData.render('NaN');
+		tests['render-inf'] = Infinity === domData.render('Infinity');
 		tests['deletes'] = domData.deletes(docElem, 'genre producer').tagName;
 		tests['dne'] = domData('html').dataset('dne');
 
