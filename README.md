@@ -1,4 +1,4 @@
-[domData](http://github.com/ryanve/domdata) (v [1.4.0](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md))
+[domData](http://github.com/ryanve/domdata) - [1.4.0](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md))
 =======
 
 domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/domdata/domdata.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
@@ -140,11 +140,13 @@ $.toDataSelector('a b cD')  // "[data-a],[data-b],[data-c-d]"
 
 ### $.toArray(item)
 
-- arrays => return the same array unchanged
-- null|undefined|''|whitespace|',,' => return []
-- non-empty strings => split CSV or SSV values
-- function|number|boolean|regexp|window => wrap in array
-- other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
+```
+// arrays => return the same array unchanged
+// null|undefined|''|whitespace|',,' => return []
+// non-empty strings => split CSV or SSV values
+// function|number|boolean|regexp|window => wrap in array
+// other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
+```
 
 ```js
 $.toArray('a b, c')  // ["a", "b", "c"]
