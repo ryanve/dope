@@ -218,15 +218,15 @@
             : 'true' === s      ? true     // convert "true" to true
             : 'false' === s     ? false    // convert "false" to false
             : 'null' === s      ? null     // convert "null" to null
-            : 'undefined' === s ? n        // convert "undefined" to undefined			
+            : 'undefined' === s ? n        // convert "undefined" to undefined            
 
-			// Convert numeric strings to numbers:
-			// "10" to 10
-			// "Infinity" to Infinity
-			// "NaN" to NaN
-			// The `=== +` comparison enables Infinities to work.
-			// The NaN part works b/c parseFloat("NaN") *is* NaN
-			: (n = parseFloat(s)) === +n || "NaN" === s ? n
+            // Convert numeric strings to numbers:
+            // "10" to 10
+            // "Infinity" to Infinity
+            // "NaN" to NaN
+            // The `=== +` comparison enables Infinities to work.
+            // The NaN part works b/c parseFloat("NaN") *is* NaN
+            : (n = parseFloat(s)) === +n || "NaN" === s ? n
 
             : s // otherwise unchanged (it was a string other than anything above)
         );
