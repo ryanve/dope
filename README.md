@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/ryanve/domdata.png)](http://travis-ci.org/ryanve/domdata)
 [domData](http://github.com/ryanve/domdata) - [1.4](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md)
 =======
 
