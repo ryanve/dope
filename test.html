@@ -3,7 +3,7 @@
 <html class="solarized" lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
 <head>
 	<meta charset=utf-8>
-	<title>domData Test Suite</title>
+	<title>dope Test Suite</title>
 	<meta name=viewport content="width=device-width,initial-scale=1.0">
 	<link rel=stylesheet href="http://cdn.airve.com/css/packed/normalize_responsive_solarized.20120408.css">
 	<meta name=author content="Ryan Van Etten">
@@ -38,7 +38,7 @@
 <body>
 	
 	<header id="header">
-		<h1><a href="http://github.com/ryanve/domdata">domData</a> Test Suite</h1>
+		<h1><a href="http://github.com/ryanve/dope">dope</a> Test Suite</h1>
 	</header>
 	
 	<pre id=ua></pre>
@@ -57,102 +57,102 @@
 			<th scope="col"><a href=#tests>actual<br>output</a></th>
 		</tr>
 		<tr>
-			<td><code>domData() <strong>instanceof</strong> domData</code></td>
+			<td><code>dope() <strong>instanceof</strong> dope</code></td>
 			<td><code>true</code></td>
 			<td><code id=instanceof></code></td>
 		</tr>
 		<tr>
-			<td><code>document.body === domData('body')[0]</code></td>
+			<td><code>document.body === dope('body')[0]</code></td>
 			<td><code>true</code></td>
 			<td><code id=body-selector></code></td>
 		</tr>
 		<tr>
-			<td><code>document.body === domData(document.body)[0]</code></td>
+			<td><code>document.body === dope(document.body)[0]</code></td>
 			<td><code>true</code></td>
 			<td><code id=body-node></code></td>
 		</tr>
 		<tr>
-			<td><code>document.body === domData([document.body])[0]</code></td>
+			<td><code>document.body === dope([document.body])[0]</code></td>
 			<td><code>true</code></td>
 			<td><code id=body-list></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('').length</code></td>
+			<td><code>dope('').length</code></td>
 			<td><code>0</code></td>
 			<td><code id=empty-length></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('body').length</code></td>
+			<td><code>dope('body').length</code></td>
 			<td><code>1</code></td>
 			<td><code id=body-length></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('div').length</code></td>
+			<td><code>dope('div').length</code></td>
 			<td><code>3</code></td>
 			<td><code id=select-tags></code></td>
 		</tr>
 		<tr>
-			<td><code><strong>typeof</strong> domData('html').dataset()</code></td>
+			<td><code><strong>typeof</strong> dope('html').dataset()</code></td>
 			<td><code>object</code></td>
 			<td><code id=typeof-dataset></code></td>
 		</tr>
 		<tr>
-			<td><code>domData(docElem).dataset() == domData.dataset(docElem)</code></td>
+			<td><code>dope(docElem).dataset() == dope.dataset(docElem)</code></td>
 			<td><code title="false in old IE is okay here (all the props still match)">true*</code></td>
 			<td><code id=dataset-object></code></td>
 		</tr>
 		<tr>
-			<td><code>'movieName' <strong>in</strong> domData('html')</code></td>
+			<td><code>'movieName' <strong>in</strong> dope('html')</code></td>
 			<td><code>true</code></td>
 			<td><code id=in></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('html').dataset('movieName')</code></td>
+			<td><code>dope('html').dataset('movieName')</code></td>
 			<td><code>Pulp Fiction</code></td>
 			<td><code id=get-movie-name></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('html')<br>.dataset('director', 'Tarantino')<br>.dataset('director')</code></td>
+			<td><code>dope('html')<br>.dataset('director', 'Tarantino')<br>.dataset('director')</code></td>
 			<td><code>Tarantino</code></td>
 			<td><code id=set-director></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.dataset(docElem, 'year', 1994).tagName</code></td>
+			<td><code>dope.dataset(docElem, 'year', 1994).tagName</code></td>
 			<td><code>HTML</code></td>
 			<td><code id=set-year></code></td>
 		</tr>
 		<tr>
-			<td><code>'1994' === domData('html').dataset('year')</code></td>
+			<td><code>'1994' === dope('html').dataset('year')</code></td>
 			<td><code>true</code></td>
 			<td><code id=get-year></code></td>
 		</tr>
 		<tr>
-			<td><code><span class=red>1994</span> === domData('html').dataset(['year'])</code></td>
+			<td><code><span class=red>1994</span> === dope('html').dataset(['year'])</code></td>
 			<td><code>true</code></td>
 			<td><code id=get-year-exact></code></td>
 		</tr>
 		<tr>
-			<td><code><span class=orange>true</span> === domData.render('true')</code></td>
+			<td><code><span class=orange>true</span> === dope.render('true')</code></td>
 			<td><code>true</code></td>
 			<td><code id=render-true></code></td>
 		</tr>
 		<tr>
-			<td><code><span class=cyan>'number'</span> === typeof domData.render('NaN')</code></td>
+			<td><code><span class=cyan>'number'</span> === typeof dope.render('NaN')</code></td>
 			<td><code>true</code></td>
 			<td><code id=render-num></code></td>
 		</tr>
 		<tr>
-			<td><code><span class=red>Infinity</span> === domData.render('Infinity')</code></td>
+			<td><code><span class=red>Infinity</span> === dope.render('Infinity')</code></td>
 			<td><code>true</code></td>
 			<td><code id=render-inf></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.deletes(docElem, 'genre producer').tagName</code></td>
+			<td><code>dope.deletes(docElem, 'genre producer').tagName</code></td>
 			<td><code>HTML</code></td>
 			<td><code id=deletes></code></td>
 		</tr>
 		<tr>
-			<td><code>domData('div').dataset(<b>{</b>
+			<td><code>dope('div').dataset(<b>{</b>
 		  	<br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
 		   <br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
 		   <br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
@@ -162,27 +162,27 @@
 			<td><code id=set-multi></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.toDataSelector(<b>[</b>'a', ' b', null, 'cD'<b>]</b>)</code></td>
+			<td><code>dope.toDataSelector(<b>[</b>'a', ' b', null, 'cD'<b>]</b>)</code></td>
 			<td><code>[data-a],[data-b],[data-c-d]</code></td>
 			<td><code id=to-data-selector-arr></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.toDataSelector('a  b,, cD'); <small>// <abbr title="comma-separated values">csv</abbr> or <abbr title="space-separated values">ssv</abbr></small></code></td>
+			<td><code>dope.toDataSelector('a  b,, cD'); <small>// <abbr title="comma-separated values">csv</abbr> or <abbr title="space-separated values">ssv</abbr></small></code></td>
 			<td><code>[data-a],[data-b],[data-c-d]</code></td>
 			<td><code id=to-data-selector-str></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.queryData('miaWallace').length</code></td>
+			<td><code>dope.queryData('miaWallace').length</code></td>
 			<td><code>3</code></td>
 			<td><code id=query-data></code></td>
 		</tr>
 		<tr>
-			<td><code>domData.queryData('miaWallace movieName').length</code></td>
+			<td><code>dope.queryData('miaWallace movieName').length</code></td>
 			<td><code>4</code></td>
 			<td><code id=query-data-multi></code></td>
 		</tr>
 		<tr>
-			<td><code><strong>typeof</strong> domData('html').data('dne')</code></td>
+			<td><code><strong>typeof</strong> dope('html').data('dne')</code></td>
 			<td><code>undefined</code></td>
 			<td><code id=dne></code></td>
 		</tr>
@@ -192,8 +192,8 @@
 		<nav>
 			<ul>
 				<li><a href="#header" title="up" accesskey=a><span class=shape>&#9650;</span></a>
-				<li><a href="https://github.com/ryanve/domdata" title="view repo" accesskey=1>Github</a>
-				<li><a href="https://github.com/ryanve/domdata/issues" title="report an issue" accesskey=9>Issue?</a>
+				<li><a href="https://github.com/ryanve/dope" title="view repo" accesskey=1>Github</a>
+				<li><a href="https://github.com/ryanve/dope/issues" title="report an issue" accesskey=9>Issue?</a>
 				<li><a href="#footer" title="down" accesskey=z>&#9660;</a>
 			</ul>
 		</nav>
@@ -208,7 +208,7 @@
 	-->
 
 	<script>
-		// Make a dummy fn object to test that domData.bridge() works:
+		// Make a dummy fn object to test that dope.bridge() works:
 		// this.$ = this.$ || function() {};
 		// $.fn = $.fn || {};
 	</script>
@@ -216,10 +216,10 @@
 	<!-- 
 	  <script src="http://airve.github.com/js/elo/elo.min.js"></script>
 	-->
-	<script src="domdata.js"></script><!-- github.com/ryanve/domdata  -->
+	<script src="dope.js"></script><!-- github.com/ryanve/dope  -->
 
 	<script>
-	(function(document, console, domData) {
+	(function(document, console, dope) {
 
 		var n, props = {}, tests = {}, hostProps = {}
 		  , docElem = document.documentElement;
@@ -228,34 +228,34 @@
 		document.getElementById('ua').innerHTML = navigator.userAgent || '';
 
 		// keep the tests in order b/c some of them rely on previous ones
-		tests['instanceof'] = domData() instanceof domData;
-		tests['body-selector'] = document.body === domData('body')[0];
-		tests['body-node'] = document.body === domData(document.body)[0];
-		tests['body-list'] = document.body === domData([document.body])[0];
-		tests['body-length'] = domData('body').length;
-		tests['select-tags'] = domData('div').length;
-		tests['empty-length'] = domData('').length;
-		tests['typeof-dataset'] = typeof domData('html').dataset();
-		tests['dataset-object'] = domData(docElem).dataset() == domData.dataset(docElem);
-		tests['in'] = 'movieName' in domData('html').dataset();
-		tests['get-movie-name'] = domData('html').dataset('movieName');
-		tests['set-director'] = domData('html').dataset('director', 'Tarantino').dataset('director');
-		tests['set-year'] = domData.dataset(docElem, 'year', 1994).tagName;
-		tests['get-year'] = '1994' === domData('html').dataset('year');
-		tests['get-year-exact'] = 1994 === domData('html').dataset(['year']);
-		tests['render-true'] = true === domData.render('true');
-		tests['render-num'] = 'number' === typeof domData.render('NaN');
-		tests['render-inf'] = Infinity === domData.render('Infinity');
-		tests['deletes'] = domData.deletes(docElem, 'genre producer').tagName;
-		tests['dne'] = domData('html').dataset('dne');
+		tests['instanceof'] = dope() instanceof dope;
+		tests['body-selector'] = document.body === dope('body')[0];
+		tests['body-node'] = document.body === dope(document.body)[0];
+		tests['body-list'] = document.body === dope([document.body])[0];
+		tests['body-length'] = dope('body').length;
+		tests['select-tags'] = dope('div').length;
+		tests['empty-length'] = dope('').length;
+		tests['typeof-dataset'] = typeof dope('html').dataset();
+		tests['dataset-object'] = dope(docElem).dataset() == dope.dataset(docElem);
+		tests['in'] = 'movieName' in dope('html').dataset();
+		tests['get-movie-name'] = dope('html').dataset('movieName');
+		tests['set-director'] = dope('html').dataset('director', 'Tarantino').dataset('director');
+		tests['set-year'] = dope.dataset(docElem, 'year', 1994).tagName;
+		tests['get-year'] = '1994' === dope('html').dataset('year');
+		tests['get-year-exact'] = 1994 === dope('html').dataset(['year']);
+		tests['render-true'] = true === dope.render('true');
+		tests['render-num'] = 'number' === typeof dope.render('NaN');
+		tests['render-inf'] = Infinity === dope.render('Infinity');
+		tests['deletes'] = dope.deletes(docElem, 'genre producer').tagName;
+		tests['dne'] = dope('html').dataset('dne');
 
 		// IE7
-		// alert (typeof domData('html').dataset('n', null).dataset('n'));
+		// alert (typeof dope('html').dataset('n', null).dataset('n'));
 		// document.body.setAttribute('n', null);
 		// alert (typeof document.body.getAttribute('n'));
 
 		// set 4 via object, then delete 2 of them, then access 1 of the non-deleted ones:
-		tests['set-multi'] = domData('div').dataset({ 
+		tests['set-multi'] = dope('div').dataset({ 
 		  	 vincentVega: 'John Travolta'
 		   , miaWallace: 'Uma Thurman'
 		   , butchCoolidge: 'Bruce Willis'
@@ -263,10 +263,10 @@
 		  }).deletes('butchCoolidge julesWinnfield')
 		    .dataset('miaWallace');
 		
-		tests['to-data-selector-arr'] = domData.toDataSelector(['a', ' b', null, 'cD']);
-		tests['to-data-selector-str'] = domData.toDataSelector('a  b,, cD'); // csv or ssv
-		tests['query-data'] = domData.queryData('miaWallace').length;
-		tests['query-data-multi'] = domData.queryData('miaWallace movieName').length;
+		tests['to-data-selector-arr'] = dope.toDataSelector(['a', ' b', null, 'cD']);
+		tests['to-data-selector-str'] = dope.toDataSelector('a  b,, cD'); // csv or ssv
+		tests['query-data'] = dope.queryData('miaWallace').length;
+		tests['query-data-multi'] = dope.queryData('miaWallace movieName').length;
 
 		// print the test outputs:
 		for (n in tests) {
@@ -277,10 +277,10 @@
 
 		if (console && typeof console.log === 'function') {// use console.log in here:
 			console.log($.mapFilter($.toArray('a  b,, cD'), $.datatize));
-			//domData.bridge($);
+			//dope.bridge($);
 			if ([].forEach && Object.keys) {
-				Object.keys(domData).forEach(function(v){
-					props[v] = domData[v];
+				Object.keys(dope).forEach(function(v){
+					props[v] = dope[v];
 				});
 				Object.keys($).forEach(function(v){
 					hostProps [v] = $[v];
@@ -288,12 +288,12 @@
 			}
 			console.log(props); // top-level props
 			console.log(hostProps); // integrated
-			domData(function(d){ console.log([this === document, d === domData, d() instanceof domData]); });
-			console.log([domData.fn === domData.prototype, domData.domData === domData, domData() instanceof domData]);
+			dope(function(d){ console.log([this === document, d === dope, d() instanceof dope]); });
+			console.log([dope.fn === dope.prototype, dope.dope === dope, dope() instanceof dope]);
 			
 		}
 
-	}(this.document, this.console, this.domData));
+	}(this.document, this.console, this.dope));
 	</script>
 </body> 
 </html>

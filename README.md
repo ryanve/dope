@@ -1,40 +1,40 @@
-[domData](http://github.com/ryanve/domdata) - [1.4](https://github.com/ryanve/domdata/blob/master/CHANGELOG.md)
+[dope](http://github.com/ryanve/dope) - [1.4](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
 =======
 
-domData is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/domdata/domdata.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
+dope is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/dope/dope.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
 
-# domData()
+# dope()
 
-The `domData()` function is a simple OO **wrapper** that works like the jQuery function.
+The `dope()` function is a simple OO **wrapper** that works like the jQuery function.
 
 ```js
-domData(element)       // wrap a DOM element (all browsers)
-domData(elementArray)  // wrap NodeList or array of DOM elements  (all browsers)
-domData(tagName)       // wrap element(s) matched by tag name (all browsers)
-domData(selector)      // wrap element(s) matched by a selector string (requires querySelectorAll)
+dope(element)       // wrap a DOM element (all browsers)
+dope(elementArray)  // wrap NodeList or array of DOM elements  (all browsers)
+dope(tagName)       // wrap element(s) matched by tag name (all browsers)
+dope(selector)      // wrap element(s) matched by a selector string (requires querySelectorAll)
 ```
 
 It can also be used to create a closure:
 
 ```js
-domData(function($) {
-	// use `$` as safe alias for `domData` in here
+dope(function($) {
+	// use `$` as safe alias for `dope` in here
 	// `this === document` in here
 });
 ```
 
 # Integration 
 
-When used **standalone**, domData's methods are accessible via the `domData` variable. It can be aliased in a closure like this:
+When used **standalone**, dope's methods are accessible via the `dope` variable. It can be aliased in a closure like this:
 
 ```js
 (function($) {
-    // use $ as an alias for domData in here
+    // use $ as an alias for dope in here
     $(document.body).dataset('foo', 'bar');
-}(domData));
+}(dope));
 ```
 
-When used alongside a **host** lib like [jQuery](http://jquery.com/) (see bridge**()**) domData's methods are also automatically integrated into the host:
+When used alongside a **host** lib like [jQuery](http://jquery.com/) (see bridge**()**) dope's methods are also automatically integrated into the host:
 
 ```js
 (function($) {
@@ -45,7 +45,7 @@ When used alongside a **host** lib like [jQuery](http://jquery.com/) (see bridge
 
 # Methods
 
-To simplify the docs below, let `$` represent `domData` or the host lib.
+To simplify the docs below, let `$` represent `dope` or the host lib.
 
 ## chainable
 
@@ -149,6 +149,8 @@ $.toArray()          // []
 
 ### $.mapFilter()
 
+[!] might change in 1.6
+
 Map an array (or arr-like object) with a callback and "compact" the result:
 
 ```js
@@ -162,6 +164,8 @@ $.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // 
 ```
 
 ### $.render()
+
+[!] might change in 1.6
 
 ```js
 $.render(str) // Convert stringified primitives to correct value. (Non-strings are unchanged.)
@@ -204,26 +208,28 @@ $.datatize('')            // ''
 $.datatize(undefined)     // ''
 ```
 
-### domData.bridge()
+### dope.bridge()
 
-The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. domData automatically augments [ender](http://ender.no.de) or [jQuery](http://jquery.com) at runtime if available. To integrate into other jQuery-compatible hosts, the bridge can be called manually as demonstrated below:
+The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. dope automatically augments [ender](http://ender.no.de) or [jQuery](http://jquery.com) at runtime if available. To integrate into other jQuery-compatible hosts, the bridge can be called manually as demonstrated below:
 
 ```js
-domData.bridge($)       // integrate domData into $ (existing methods are not overwritten)
-domData.bridge($, true) // integrate domData into $ (overwriting existing methods, if any)
+dope.bridge($)       // integrate dope into $ (existing methods are not overwritten)
+dope.bridge($, true) // integrate dope into $ (overwriting existing methods, if any)
 ```
 
-### domData.noConflict()
+### dope.noConflict()
 
-Destroy the global `domData` and return `domData`. Optionally call a function that gets `domData` supplied as the first arg.
+[!] might change in 1.6
+
+Destroy the global `dope` and return `dope`. Optionally call a function that gets `dope` supplied as the first arg.
 
 ```js
-domData.noConflict(); // simply destroys the global
+dope.noConflict(); // simply destroys the global
 ```
 
 ```js
-domData.noConflict(function(domData){  
-  /* use domData in here */  
+dope.noConflict(function(dope){  
+  /* use dope in here */  
 });
 ```
 
@@ -231,12 +237,12 @@ domData.noConflict(function(domData){
 
 ```js
 // define the module and simultaneously destroy the global:
-define('domdata', domData.noConflict);
+define('dope', dope.noConflict);
 ```
 
 ```js
 // define the module and keep the global too:
-define('domdata', function(){ return domData; });
+define('dope', function(){ return dope; });
 ```
 
 # Compatibility
@@ -245,11 +251,11 @@ Supports all major browsers. (Tested in Chrome / FF3+ / IE7+ / Opera / Safari)
 
 # CDN
 
-domData is available on [airve.github.com](http://airve.github.com/)
+dope is available on [airve.github.com](http://airve.github.com/)
 
 # License
 
-### [domData](http://github.com/ryanve/domdata) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
+### [dope](http://github.com/ryanve/dope) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
 
 Copyright (C) 2012 by [Ryan Van Etten](https://github.com/ryanve)
 

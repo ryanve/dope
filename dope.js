@@ -1,27 +1,27 @@
 /*!
- * domData      HTML5 dataset API abstraction that works as a standalone
+ * dope         HTML5 dataset API abstraction that works as a standalone
  *              lib or integrates into any jQuery-compatible host. It runs
  *              screamin-fast, cross-browser, and gzips < 2k. Got data? =]
  *
  * @author      Ryan Van Etten (c) 2012
- * @link        http://github.com/ryanve/domdata
+ * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     1.4.1
+ * @version     1.5.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
 , continue: true, debug: true, eqeq: true, es5: true, forin: true, newcap: true
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
-, sub: true, white: true, indent: 4, maxerr: 50 */
+, sub: true, white: true, indent: 4, maxerr: 180 */
 
 (function(factory) {
     if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
         module.exports = factory();     // node server
-    } else { this['domData'] = factory(); } // browser
+    } else { this['dope'] = factory(); } // browser
 }(function(host) {// factory:
 
     var root = this
-      , name = 'domData'
+      , name = 'dope'
       , old = root[name]
       , win = window
       , doc = document
@@ -45,7 +45,7 @@
     
     // Allow a host to be passed to the factory for use with bridge()
     // e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
-    // added to the logic at the top, then domData's methods would automatically 
+    // added to the logic at the top, then dope's methods would automatically 
     // be added to jQuery. Otherwise we look in the root. A host is not req'd,
     // but if one is found, we autmatically integrate into it:
 
@@ -492,8 +492,8 @@
      * noConflict()  Destroy the global and return the api. Optionally call 
      *               a function that gets the api supplied as the first arg.
      * @param        {function(*)=} callback   optional callback function
-     * @example      var localDomData = domData.noConflict();
-     * @example      domData.noConflict(function(domData){    });
+     * @example      var localDomData = dope.noConflict();
+     * @example      dope.noConflict(function(dope){    });
      */
     api['noConflict'] = function(callback) {
         root[name] = old;
