@@ -1,22 +1,53 @@
-[dope](http://github.com/ryanve/dope) - [2.0](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
+[dope](http://github.com/ryanve/dope) - [1.5](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
 =======
 
 dope is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/dope/dope.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
 
+# dope()
 
-### notes
-
-In standalone usage, methods are available on the **dope** namespace: 
+The `dope()` function is a simple OO **wrapper** that works like the jQuery function.
 
 ```js
-dope.dataset(document.body, 'foo', 'bar');
+dope(element)       // wrap a DOM element (all browsers)
+dope(elementArray)  // wrap NodeList or array of DOM elements  (all browsers)
+dope(tagName)       // wrap element(s) matched by tag name (all browsers)
+dope(selector)      // wrap element(s) matched by a selector string (requires querySelectorAll)
 ```
 
-The docs below use `$` to denote `dope` or a host lib (like jQuery).
+It can also be used to create a closure:
 
-# methods
+```js
+dope(function($) {
+	// use `$` as safe alias for `dope` in here
+	// `this === document` in here
+});
+```
 
-## chain
+# Integration 
+
+When used **standalone**, dope's methods are accessible via the `dope` variable. It can be aliased in a closure like this:
+
+```js
+(function($) {
+    // use $ as an alias for dope in here
+    $(document.body).dataset('foo', 'bar');
+}(dope));
+```
+
+When used alongside a **host** lib like [jQuery](http://jquery.com/) (see bridge**()**) dope's methods are also automatically integrated into the host:
+
+```js
+(function($) {
+    // use $ as an alias for jQuery in here
+    $(document.body).dataset('foo', 'bar');
+}(jQuery));
+```
+
+# Methods
+
+To simplify the docs below, let `$` represent `dope` or the host lib.
+
+## chainable
 
 ### $.fn.dataset()
 
@@ -46,7 +77,7 @@ $(elem).deletes(keys) // remove 1 or more space-separated data attrs from elem (
 $(document.body).deletes('movieName')      // remove [data-movie-name] from the <body> element
 ```
 
-## static
+## top-level
 
 ### $.dataset()
 
@@ -84,21 +115,70 @@ $.queryData(keys)         // get elements by data key (keys can be an array or C
 $.queryData('miaWallace vincentVega')  // Delegate to $("[data-mia-wallace],[data-vincent-vega]")
 ```
 
-### $.parse()
+
+### $.toDataSelector()
 
 ```js
-$.parse(str) // Convert stringified primitives to correct value. (Non-strings are unchanged.)
-$.parse(str, true) // Parse JSON (in a safe wrapper that won't throw an error)
+$.toDataSelector(keys)  // convert an array (or CSV or SSV string) of data keys into a selector string
 ```
 
 ```js
-$.parse('yo')        // 'yo'
-$.parse('10')        // 10
-$.parse('true')      // true
-$.parse('null')      // null
-$.parse('undefined') // undefined
-$.parse('Infinity')  // Infinity
-$.parse('NaN')       // NaN
+$.toDataSelector('a b cD')  // "[data-a],[data-b],[data-c-d]"
+```
+
+### $.toArray(item)
+
+```
+* arrays => return the same array unchanged
+* null|undefined|''|whitespace|',,' => return []
+* non-empty strings => split CSV or SSV values
+* function|number|boolean|regexp|window => wrap in array
+* other objects => arrayify via `slice.call` if array-like, otherwise wrap in array
+```
+
+```js
+$.toArray('a b, c')  // ["a", "b", "c"]
+$.toArray([0, 1, 2]) // [0, 1, 2]
+$.toArray(true)      // [true]
+$.toArray(0)         // [0]
+$.toArray(null)      // []
+$.toArray('  ')      // []
+$.toArray('')        // []
+$.toArray()          // []
+```
+
+### $.mapFilter()
+
+[!] might change in 1.6
+
+Map an array (or arr-like object) with a callback and "compact" the result:
+
+```js
+$.mapFilter(arr, callback [, scope])
+```
+
+@link [jsperf.com/mapfilter](http://jsperf.com/mapfilter)
+
+```js
+$.mapFilter([0, 1, "two"], function(v, i){ return typeof v === 'number'; }); // [1]
+```
+
+### $.render()
+
+[!] might change in 1.6
+
+```js
+$.render(str) // Convert stringified primitives to correct value. (Non-strings are unchanged.)
+```
+
+```js
+$.render('yo')        // 'yo'
+$.render('10')        // 10
+$.render('true')      // true
+$.render('null')      // null
+$.render('undefined') // undefined
+$.render('Infinity')  // Infinity
+$.render('NaN')       // NaN
 ```
 
 ### $.camelize()
@@ -137,9 +217,31 @@ dope.bridge($)       // integrate dope into $ (existing methods are not overwrit
 dope.bridge($, true) // integrate dope into $ (overwriting existing methods, if any)
 ```
 
+### dope.noConflict()
+
+[!] might change in 1.6
+
+Destroy the global `dope` and return `dope`. Optionally call a function that gets `dope` supplied as the first arg.
+
+```js
+dope.noConflict(); // simply destroys the global
+```
+
+```js
+dope.noConflict(function(dope){  
+  /* use dope in here */  
+});
+```
+
 # [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
 
 ```js
+// define the module and simultaneously destroy the global:
+define('dope', dope.noConflict);
+```
+
+```js
+// define the module and keep the global too:
 define('dope', function(){ return dope; });
 ```
 

@@ -1,5 +1,14 @@
 # CHANGELOG | [current](https://github.com/ryanve/dope/blob/master/dope.js)
 
+## 2.0.0 (2012-09-18)
+- Reorganized and improved much of the underlying code.
+- Removed wrapper function. `dope` is now an `[object Object]`. It still contains an `.fn` methods usable via `.call` or when integrated into a jQuery-compatible library.
+- Top-level dataset/attr methods are now "fast and simple" while the .fn versions are "full-feature" for collections.
+- Renamed `dope.render()` to `dope.parse()` and added option to parse JSON.
+- Added `dope.attr()`/`dope.removeAttr()`/`dope.queryAttr()`
+- Added general purpose `dope.trim()` and `dope.map()` (to replace mapFilter)
+- Removed `dope.toDataSelector()`/`dope.noConflict()`/`dope.toArray()`/`dope.mapFilter`
+
 ## [1.5.0](https://github.com/ryanve/dope/commit/629a0931e97ac7c5b2b7f84b9186aa1ca2b5096d) (2012-09-09)
 - Rename repo/export from "domdata"/"domData" to "dope"
 

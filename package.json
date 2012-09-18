@@ -1,7 +1,7 @@
 {
     "name": "dope",
     "description": "Cross-browser HTML5 dataset API",
-    "version": "1.5.0",
+    "version": "2.0.0",
     "homepage": "https://github.com/ryanve/dope",
     "author": "Ryan Van Etten <@ryanve>",
     "keywords": ["dataset", "data", "html5", "dom", "jquery", "ender", "javascript", "js", "domdata"],

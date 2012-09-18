@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     1.5.0
+ * @version     2.0.0 pre
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -14,222 +14,167 @@
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
 , sub: true, white: true, indent: 4, maxerr: 180 */
 
-(function(factory) {
-    if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
-        module.exports = factory();     // node server
-    } else { this['dope'] = factory(); } // browser
-}(function(host) {// factory:
+(function (root, name, factory) {
+    if (typeof module != 'undefined' && module.exports){ module.exports = factory(); } // node
+    else { root[name] = factory(); } // browser
+}(this, 'dope', function () {
 
-    var root = this
-      , name = 'dope'
-      , old = root[name]
-      , win = window
-      , doc = document
-      , FN = 'fn' // inlined @ minification
-      , slice = [].slice
-
-      , DMS = typeof DOMStringMap !== 'undefined'
-      , QSA = !!doc.querySelectorAll // caniuse.com/#feat=queryselector
-
-      , queryEngine = QSA // Simple query engine:
-            ? function (s, root) { return s ? (root || doc).querySelectorAll(s) : []; }
-            : function (s, root) { return s ? (root || doc).getElementsByTagName(s) : []; }
-
-      , regexCamels = /([a-z])([A-Z])/g          // lowercase next to uppercase
-      , regexDashB4 = /-(.)/g                    // finds chars after hyphens
-      , regexDataPrefix = /^data-(.+)$/          // starts with data-
-      , regexCsvOrSsv = /\s*[\s\,]+\s*/          // splitter for comma *or* space-separated values
-      , regexCleanKey = /^[\[\s]+(data-)?|\s+|[\]\s]+$/g  // replace whitespace, trim [] brackets, trim prefix
-      , regexEscPeriods = /\\*\./g               // find periods w/ and w/o preceding backslashes
-    ;
-    
-    // Allow a host to be passed to the factory for use with bridge()
-    // e.g. If `factory(jQuery)` or `define(name, ['jquery'], factory)` were
-    // added to the logic at the top, then dope's methods would automatically 
-    // be added to jQuery. Otherwise we look in the root. A host is not req'd,
-    // but if one is found, we autmatically integrate into it:
-
-    // could to this:
-    // `ender` will pass the `$` checks below too but we put it as a backup in case `$` has been 
-    // reclaimed and/or noConflict has been called. (ender.no.de is designed for integration)
-    // host = host || root[typeof $ === 'function' && $[FN] === $.prototype ? '$' : 'ender'];
-
-    // but this is more definitive and easier to explain in the docs:
-    host = host || root['ender'] || root['jQuery'];
-
-    // Array notation is used on property names that we don't want the
-    // Closure Compiler to rename in the advanced optimization mode. 
-    // closure-compiler.appspot.com/home
+    // Array notation is used on property names that we don't want
+    // closure-compiler.appspot.com to rename in the advanced mode. 
     // developers.google.com/closure/compiler/docs/api-tutorial3
     // developers.google.com/closure/compiler/docs/js-for-compiler
 
-    /**
-     * api is the export (methods are added to it)
-     * @param  {*}        item 
-     * @param  {Object=}  root
-     * @return {Object}   array-like object
-     */
-    function api(item, root) {
-        return new Api(item, root);
-    }
-
-    /**
-     * @constructor
-     * @param {*}        item 
-     * @param {Object=}  root
-     */
-    function Api(item, root) {
-        var i;
-        if ( !item ) { return this; }
-        if (typeof item === 'function') {
-            item.call(doc, api); // @since 1.2.0
-        } else if (item.nodeType || item === win || (i = item.length) !== +i) {
-            // DOM elems/nodes or anything w/o a length number gets handled here. The window
-            // has length in it and must be checked too. ( jsperf.com/iswindow-prop )
-            this[0] = item; 
-            this['length'] = 1;
-        } else {// Array-like:
-            if (typeof item === 'string') {
-                this['selector'] = item;
-                item = queryEngine(item, root);
-                i = item.length;
-            }
-            // Ensure length is 0 or a positive finite num:
-            this['length'] = i = (i !== +i || i < 0) ? 0 : i >>> 0;
-            while (i--) {// make array-like:
-                this[i] = item[i]; 
-            }
-        } // implicitly returns `this`
-    }
-
-    // jQuery-inspired magic to make `api() instanceof api` be true and to make
-    // it so that methods added to api[FN] map back to the prototype + vice versa:
-    api.prototype = api[FN] = Api.prototype = {};
+    var root = this
+      , win = window
+      , doc = document
+      , xports = {}
+      , effins = {}
+      , DMS = typeof DOMStringMap != 'undefined'
+      , AP = Array.prototype
+      , OP = Object.prototype
+      , slice = AP.slice
+      , push = AP.push
+      , join = AP.join
+      , owns = OP.hasOwnProperty
+      , toString = OP.toString
+      , JSON = root['JSON']
+      , parseJSON = !!JSON && JSON.parse
+      , queryMethod = 'querySelectorAll' 
+      , QSA = !!doc[queryMethod] || !(queryMethod = 'getElementsByTagName')
+      , queryEngine = function (s, root) {
+            return s ? (root || doc)[queryMethod](s) : []; 
+        }
+      , camels = /([a-z])([A-Z])/g          // lowercase next to uppercase
+      , dashB4 = /-(.)/g                    // finds chars after hyphens
+      , csvSsv = /\s*[\s\,]+\s*/          // splitter for comma *or* space-separated values
+      , cleanAttr = /^[\[\s]+|\s+|[\]\s]+$/g  // replace whitespace, trim [] brackets
+      , cleanPre = /^[\[\s]?(data-)?|\s+|[\]\s]?$/g  // replace whitespace, trim [] brackets, trim prefix
+      , escDots = /\\*\./g               // find periods w/ and w/o preceding backslashes
+      , alphaNum = /^[a-z0-9]+$/i
+      , ssv = /\s+/
+      , trimmer = /^\s+|\s+$/
+      , trim = ''.trim ? function (s) {
+            return null == s ? '' : s.trim(); 
+        } : function (s) {
+            return null == s ? '' : s.replace(trimmer, ''); 
+        };
     
-    // Defaults props:
-    api[FN]['selector'] = '';
-    api[FN]['length'] = 0;
-    
-    // Create top-level reference to self:
-    // This makes it possible to bridge into a host, destroy the global w/ noConflict, 
-    // and still access the entire api from the host (not just the bridged methods.)
-    // It is also useful for other modules that may want to use this module, even after 
-    // the global is gone.
-    api[name] = api;
-
     /**
      * camelize()         Convert  'data-pulp-fiction' to 'pulpFiction'. This method only
-     *                    deals w/ strings or numbers. Numbers simply turn into strings. Other
+     *                    deals w/ scalar types. Numbers turn into strings. Non-scalar
      *                    inputs become an empty string. (datatize() is the opposite of camelize())
      * 
-     * @param   {string|number|*}  s
+     * @param   {string|number|boolean|*}  s
      * @return  {string}
      */
-    function camelize(s) {
+    function camelize (s) {
         // Remove data- prefix and convert remaining dashed string to camelCase:
-        // Only deal w/ strings|numbers. Other cases return an empty string:
-        // HANDLE non-strings and falsey values:
-        if ( !s || !s.replace ) {
-            return s === +s ? '' + s : ''; // turn numbers into strings (`7` to `'7'`)
+        // Only deal w/ strings|numbers|booleans. Other types return empty string:
+        if ( typeof s != 'string' ) {// convert into string (`7` to `'7'`)
+            return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
         }
-        // HANDLE strings:
-        return (s.replace(regexCleanKey, '') // remove whitespace, trim [] brackets, trim prefix
-                 .replace(regexDashB4, function (m, m1) { return m1.toUpperCase(); })); // -a to A
+        return s.replace(cleanPre, '').replace(dashB4, function (m, m1) { 
+            return m1.toUpperCase(); // -a to A
+        }); 
     }
 
     /**
      * datatize()         Convert  'pulpFiction' to 'data-pulp-fiction' OR 47 to 'data-47'
-     *                    This method only deals w/ strings or numbers. Other inputs return
+     *                    This method only deals w/ scalar types. Other inputs return
      *                    an empty string. (datatize() is the opposite of camelize())
      * 
      * @param   {string|number|*}  s
      * @return  {string}
      */
-    function datatize(s) {
-        // HANDLE non-strings and falsey values:
-        if ( !s || !s.replace ) {
-            return s === +s ? 'data-' + s : ''; // allows numbers to work incl. 0 but not NaN
-        }
-        // HANDLE strings:
-        s = s.replace(regexCleanKey, '$1') // remove whitespace, trim [] brackets, trim data- prefix
-             .replace(regexCamels, '$1-$2') // add dashes between camel humps (aA to a-A)
-             .toLowerCase();
-        return s ? 'data-' + s : ''; // add the data- prefix only if `s` is truthy
+    function datatize (s) {
+        if ( typeof s == 'string' ) {
+            s = s.replace(cleanPre, '$1').replace(camels, '$1-$2'); // aA to a-A
+        } else { s = typeof s == 'number'  ? '' + s : ''; }
+        return s ? ('data-' + s.toLowerCase()) : s;
+    }
+
+    function implode ( list, delim ) {
+        if ( null == list ) { return ''; }
+        if ( typeof list != 'object' ) { return '' + list; }
+        return join.call(list, delim || ' ');
+    }
+
+    function explode ( list, delim ) {// returns same arr if already arr
+        if ( null == list ) { return []; }
+        if ( typeof list == 'object' && typeof list.length == 'number' ) { return list; }
+        if ( typeof list != 'string' ) { return [list]; } // func|bool|numb
+        return (list = list.split(delim || ssv))[0] ? list : []; // string
     }
 
     /**
-     * Ensure that the data you are dealing w/ is an array. 
-     * arrays => return the same array unchanged
-     * null|undefined|''|whitespace|',,' => return []
-     * strings => split CSV or SSV values
-     * function|number|boolean|regexp => wrap in array
-     * objects => arrayify if array-like, otherwise wrap in array
-     * @param  {*} list
-     * @return {Array}
+     * parse()                    Convert a stringified primitive back to its correct type. 
+     *                            OR parse JSON in a safe way.
+     * @param {string|*}  s
+     * @param {boolean=}  json
      */
-    function toArray(list) {
-        if ( list == null ) { return []; }
-        if ( typeof list === 'string' ) {
-            list = list.split(regexCsvOrSsv); // '' or pure whitespace/commas splits to ['']
-            return list[0] || 1 !== list.length ? list : []; // if [''] then return []
+    function parse ( s, json ) {
+    
+        var n; // <= initially undefined
+        if ( typeof s != 'string' || !(s = trim(s)) ) { return s; }
+        
+        if ( 'true' === s ) { return true; }
+        if ( 'false' === s ) { return false; }
+        if ( 'null' === s ) { return null; }
+        
+        // undefined|number
+        if ( 'undefined' === s || (n = (+s)) || 0 === n || 'NaN' === s ) { return n; }
+        
+        if ( json === true ) {
+            try { s = parseJSON(s); }
+            catch (e) {}
         }
-        if ( typeof list === 'object' ) {
-            if ( list instanceof Array ) { return list; } // unchanged
-            return list.length === +list.length && list !== win ? slice.call(list) : [list];
-        }
-        return [list]; // functions / numbers / booleans
+        
+        return s;
     }
 
     /**
-     * Map an array (or array-like object) and then compact the result. 
-     * Both operations are combined into one loop.
-     * @param  {Object|Array|*}  list
-     * @param  {function(...)}   fn
-     * @param  {(Object|*)=}     scope   thisArg
-     * @return {Array}
+     * @param   {Object|Array|*}  list
+     * @param   {Function}        fn     
+     * @param   {(Object|*)=}     scope
+     * @param   {boolean=}        compact 
+     * @return  {Array}
      */
-    function mapFilter(list, fn, scope) {
-        var l, i = 0, v, ret = [];
-        if (list == null) { return ret; }
-        for (l = list.length; i < l; i++) {
-            i in list && (v = fn.call(scope, list[i], i, list)) && ret.push(v);
+    function map (list, fn, scope, compact) {
+        var l, i = 0, v, u = 0, ret = [];
+        if ( list == null ) { return ret; }
+        compact = compact === true;
+        l = list.length;
+        while ( i < l ) {
+            v = fn.call(scope, list[i], i++, list);
+            if ( v || !compact ) { ret[u++] = v; }
         }
         return ret;
     }
-
-    /**
-     * datatizeAll()   (internal only @since 1.4.0)
-     * inlined @ minification
-     * @param   {Object|Array|string|number|*}  list
-     * @return  {Array}     array of datatized names
-     */
-    function datatizeAll(list) {
-        return mapFilter(toArray(list), datatize);
+    
+    // special-case iterator optimized for internal use
+    function eachNode (ob, fn, param) {
+        var l = ob.length, i;
+        for ( i = 0; i < l; i++ ) {
+            ob[i] && ob[i].nodeType && fn(ob[i], param);
+        }
+        return ob;
     }
 
-    /**
-     * render()         Convert a stringified primitive back to its correct type.
-     * @param {string|*} s
-     */
-    function render(s) {
-        var n; // <= initially undefined
-        return (!s || typeof s !== 'string' ? s  // unchanged
-
-            : 'true' === s      ? true     // convert "true" to true
-            : 'false' === s     ? false    // convert "false" to false
-            : 'null' === s      ? null     // convert "null" to null
-            : 'undefined' === s ? n        // convert "undefined" to undefined            
-
-            // Convert numeric strings to numbers:
-            // "10" to 10
-            // "Infinity" to Infinity
-            // "NaN" to NaN
-            // The `=== +` comparison enables Infinities to work.
-            // The NaN part works b/c parseFloat("NaN") *is* NaN
-            : (n = parseFloat(s)) === +n || "NaN" === s ? n
-
-            : s // otherwise unchanged (it was a string other than anything above)
-        );
+    function eachAttr (el, fn, dset) {
+        var l, a, n, i = 0, prefix;
+        if ( !el.attributes ) { return; }
+        if (typeof dset == 'boolean') {
+            prefix = /^data-/;
+        } else { dset = null; }
+        l = el.attributes.length;
+        while ( i < l ) {
+            if ( a = el.attributes[i++] ) {
+                n = '' + a.name;
+                if ( dset == null || prefix.test(n) === dset ) {
+                    null == a.value || fn.call(el, a.value, n, a);
+                }
+            }
+        }
     }
 
     /**
@@ -241,183 +186,166 @@
     function getDataset(el) {
 
         var i, a, n, ob;
-        if ( !el || 1 !== el.nodeType ) { return ob; } // undefined
-        
-        // Use the native dataset when available:
-        if (DMS && (ob = el.dataset) && typeof ob === 'object') {
-           return ob;
-        }
+        if ( el && 1 === el.nodeType ) {
+            // Return the native dataset when avail:
+            if ( DMS && (ob = el.dataset) ) { return ob; }
+            
+            // Fallback gets a cloned plain object that
+            // cannot mutate the dataset via reference
+            ob = {};
+            eachAttr(el, function (v, k) {
+                ob[ camelize(k) ] = '' + v;
+            }, true);
 
-        // Fallback adapted from github.com/ded/bonzo
-        if ( el.attributes ) {
-            ob = {}; // plain object (not DOMStringMap)
-            i = el.attributes.length;
-            while (i--) {
-                (a = el.attributes[i]) 
-                && (n = ('' + a.name).match(regexDataPrefix)) 
-                && a.value != null // probably redundant but make sure
-                && (ob[camelize(n[1])] = '' + a.value); // normalize to a string
-            }
         }
-
-        return ob;
+        return ob; // Object|undefined
     }
-
-    /**
-     * dataset()
-     * @param   {Object}                      el
-     * @param   {Object|Array|string|number=} key
-     * @param   {*=}                          val
-     */
-    function dataset(el, key, val) {
-
-        var ob, n, i // undefined
-          , hasVal = arguments.length > 2
-          , hasKey = arguments.length > 1
-          , isNode = !!el && typeof el.nodeType === 'number'
-          , isCollection = !!el && !isNode && el.length === +el.length
-          , doRender = 0
-        ;
-
-        if ( (!el && hasKey) || (!isNode && !isCollection) ) {
-            throw new TypeError('@dataset'); 
-        }
-
-        if ( typeof key !== 'object' || (doRender = key instanceof Array) ) {
-        
-            if ( !hasVal ) {// GET simple / [exact] / "get all"
-
-                el = isCollection ? el[0] : el;
-                
-                if ( !hasKey ) {
-                    // HANDLE: dataset(el)
-                    return getDataset(el); 
-                }
-
-                // HANDLE: dataset(el, key)
-                if (el.getAttribute && (key = datatize(doRender ? key[0] : key))) {
-                    val = el.getAttribute(key);
-                }
-                // Normalize null|undefined to `undefined`. Normalize everything else
-                // to a string. (In IE7, numbers get coherced to numbers. This fixes that.)
-                val = val == null ? n : '' + val; 
-                return doRender ? render(val) : val; 
-            }
-            
-            if ( isCollection ) {
-                // SET (collection)
-                // Delegate simple "sets" on collections to effin:
-                return fnDataset.call(el, key, val);
-            }
-            
-            if ( key = datatize(key) ) {
-                // SET (simple)
-                // Normalize `val` to a string (needed to read null|undefined in IE7)
-                el.setAttribute && el.setAttribute(key, '' + val);
-                return el;
+    
+    function resetDataset(el, ob) {
+        if ( !el ) { return; }
+        var n, curr = el.dataset;
+        if ( curr && DMS ) {
+            if ( curr === ob ) { return; }
+            for ( n in curr ) { 
+                delete curr[n]; 
             }
         }
-
-        if ( !key ) { // `null` gets handled here
-            // HANDLE: user error
-            // ~SET => return el (continue the chain)
-            // ~GET => return undefined (n is undefined)
-            return hasVal ? el : n;
+        ob && dataset(el, ob);
+    }
+    
+    function setViaObject (el, ob, fn) {
+        var n;
+        for ( n in ob ) {
+            owns.call(ob, n) && fn(el, n, ob[n]);
         }
-
-        // HANDLE: $.data(elem, object)
-        ob = key; // `key` must be an 'object' if we get to here. Reassign so we don't go insane.
-        // We treat strings created using the `new` operator as objects. ( bit.ly/typeof-tostring )
-        // Do the for/in loop as the outer loop to avoid datatize-ing the same key multiple times.
-        for (n in ob) {// SET via object
-            if ( ob.hasOwnProperty(n) && (key = datatize(n)) ) {
-                if ( isCollection ) {
-                    for (i = 0; i < el.length; i++) {// `i` must reset to 0 for each outer iteration
-                        // Normalize value to a string (needed to read null|undefined in IE7)
-                        el[i] && el[i].setAttribute && el[i].setAttribute(key, '' + ob[n]);
-                    }
-                } else if (el.setAttribute) {
-                    // Normalize value to a string (needed to read null|undefined in IE7)
-                    el.setAttribute(key, '' + ob[n]);
-                }
-            }
-        }
-        return el; // chain
     }
     
     /**
-     * .dataset()
-     * @param   {Object|Array|string|number=} key
-     * @param   {*=}                          val
-     */
-    function fnDataset(key, val) {
-        var l, i = 0, count = arguments.length, hasVal = count > 1;
-        
-        if ( !this.length ) { 
-            return hasVal ? this : l;  // object or `undefined`
-        }
+     * @param  {Object|Array|Function}  el
+     * @param  {(string|Object)=}       k
+     * @param  {*=}                     v
+     */    
+    function attr (el, k, v) {
 
-        if ( !hasVal ) {
-            // Delegate simple "gets" and "set via object" to the top-level method.
-            // Delegate "get all" directly to getDataset()
-            return count ? dataset(this, key) : getDataset(this[0]);
-        }
-        
-        // HANDLE "set" for each elem in the collection right here, so we don't have to
-        // run thru the key logic each time --- it saves several function calls this way:
-        if (key = datatize(key)) {
-            val = '' + val; // normalize `val` to a string (needed to read null|undefined in IE7)
-            for (l = this.length; i < l; i++) {
-                // Iterate thru the the elems, setting data on each of them.
-                if (this[i] && this[i].setAttribute) {// Only set data on truthy items:
-                    this[i].setAttribute(key, val);
-                }
+        el = el.nodeType ? el : el[0];
+        if ( !el || !el.setAttribute ) { return; }
+        k = typeof k == 'function' ? k.call(el) : k;
+        if ( !k ) { return; }
+
+        if ( typeof k == 'object' ) {// SET-multi
+            setViaObject(el, k, attr);
+        } else {
+            if ( void 0 === v ) {// GET
+                k = el.getAttribute(k); // repurpose `k`
+                return null == k ? v : '' + k; // normalize
             }
+            // SET:
+            v = typeof v == 'function' ? v.call(el) : v;
+            v = '' + v; // normalize inputs
+            el.setAttribute(k, v);
+            return v; // the curr value
         }
-        return this;
+    }
+    
+    /**
+     * @param  {Object|Array|Function}  el
+     * @param  {(string|Object)=}       k
+     * @param  {*=}                     v
+     */    
+    function dataset (el, k, v) {
+    
+        var exact, kFun = typeof k == 'function';
+        el = el.nodeType ? el : el[0];
+        if ( !el || !el.setAttribute ) { return; }
+        if ( void 0 === k && v === k ) { return getDataset(el); }
+        k = kFun ? k.call(el) : k;
+
+        if ( typeof k == 'object' && (kFun || !(exact = void 0 === v && datatize(k[0]))) ) {
+            // SET-multi
+            kFun && deletes(el);
+            k && setViaObject(el, k, dataset);
+        } else {
+            k = exact || datatize(k);
+            if ( !k ) { return; }
+            if ( void 0 === v ) {// GET
+                k = el.getAttribute(k); // repurpose `k`
+                return null == k ? v : exact ? parse(k) : '' + k; // normalize
+            }
+            // SET
+            v = typeof v == 'function' ? v.call(el) : v;
+            v = '' + v; // normalize inputs
+            el.setAttribute(k, v);
+            return v; // the curr value
+        }
     }
 
     /**
      * deletes()
      *
-     * @param  {Object}             elems
-     * @param  {Array|string}       keys
+     * @param  {Object}                  el
+     * @param  {(Array|string|number)=}  keys
      */
-    function deletes(elems, keys) {
-        var j, l, i = 0, h, name, el;
-        if (elems && keys) {
-            keys = datatizeAll(keys); // compact data-names
-            h = keys.length;
-            if (elems.nodeType && elems.removeAttribute) {
-                // single element:
-                while (i < h) {// minifies to for(;i<h;)
-                    elems.removeAttribute(keys[i++]);
-                }
-                return elems;
-            }
-            // collection (or maybe something else, but that'll be fine
-            // b/c cause they'll be zero iterations:
-            for (l = elems.length; i < l; i++) {
-                if (elems[i] && elems[i].removeAttribute) {
-                    j = 0; // must reset for each outer iteration
-                    while (j < h) {
-                        elems[i].removeAttribute(keys[j++]);
-                    }
-                }
-            }
+    function deletes (el, keys) {
+    
+        var k, i = 0;
+        el = el.nodeType ? el : el[0];
+        
+        if ( !el || !el.removeAttribute ) { return; }
+        if ( void 0 === keys ) { return resetDataset(el); }
+        
+        keys = typeof keys == 'string' 
+             ? keys.split(ssv) 
+             : typeof keys != 'object' ? [keys] : keys;
+             
+        while ( i < keys.length ) {
+            k = datatize( keys[i++] );
+            k && el.removeAttribute(k);
         }
-        return elems;
     }
     
+    /**
+     * removeAttr()
+     * @param  {Object}                  el
+     * @param  {(Array|string|number)=}  keys
+     */
+    function removeAttr (el, keys) {
+        var k, i = 0;
+        el = el.nodeType ? el : el[0];
+        if ( !keys || !el || !el.removeAttribute ) { return; }
+        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
+        while ( i < keys.length ) {
+            k = keys[i++];
+            k && el.removeAttribute(k);
+        }
+    }
+
     /**
      * toDataSelector()          Converts ['aB', 'bA'] to '[data-a-b],[data-b-a]'
      *                           OR even ['[ data-a-b]', 'data-b-a'] to '[data-a-b],[data-b-a]'
      * @param   {Array|string|number|*} list    array, key, or CSV or SSV string of data keys
      * @return  {string}                selector string
      */
-    function toDataSelector(list) {
+    //function toDataSelector(list) {
+    //   return toAttrSelector(list, datatize);
+    //}
     
-        list = datatizeAll(list); // convert to compact array
+    function toAttrSelector(list, prefix, join) {
+    
+        if (typeof list == 'string') { list = list.split(csvSsv); }
+        else if (typeof list == 'number') { list = ('' + list); }
+        
+        var i = 0, j = 0, emp = '', arr = [], l = list.length;
+        prefix = true === prefix;
+        
+        while ( i < l ) {
+            s = list[i++];
+            s = prefix ? datatize(s) : s.replace(cleanAttr, emp);
+            s && (arr[j++] = s);
+        }
+
+        if ( join === false ) {
+            return arr; 
+        }
         
         // Escape periods b/c we're not dealing with classes. Periods are 
         // valid in data attribute names. <p data-the.wh_o="totally valid">
@@ -425,125 +353,189 @@
         // goes for QSA. Here we're only concerned w/ the chars of those
         // that are valid in data attr keys--just periods. Dashes+underscores
         // are valid too but they don't need to be escaped.
-        
-        return list.length ? '[' + list.join('],[').replace(regexEscPeriods, '\\\\.') + ']' : '';
+        return j ? '[' + arr.join('],[').replace(escDots, '\\\\.') + ']' : emp;
     }
-    
+
     /**
      * queryData()                      Get elements by data key.
      * 
      * @param   {Object|string}  list   array or comma/space-separated data keys.
      * @return  {Object}                array of elements
+     */     
+    xports['queryData'] = QSA ? function (list, root) {
+        // Modern browsers, IE8+
+        if (root === false) { return toAttrSelector(list, true, root); }
+        return queryEngine(toAttrSelector(list, true), root); 
+
+    } : function (list, root) {// == FALLBACK ==
+        list = toAttrSelector(list, true, false);
+        if (root === false) { return list; }
+        return queryAttrFallback(list, root); 
+    };
+    
+    /**
+     * queryAttr()                      Get elements by attribute name.
+     * 
+     * @param   {Object|string}  list   array or comma/space-separated data keys.
+     * @return  {Object}                array of elements
+     */     
+    xports['queryAttr'] = QSA ? function (list, root) {
+        // Modern browsers, IE8+
+        if (root === false) { return toAttrSelector(list, root, root); }
+        return queryEngine(toAttrSelector(list), root); 
+    
+    } : function (list, root) {// == FALLBACK ==
+        list = toAttrSelector(list, false, false);
+        if (root === false) { return list; }
+        return queryAttrFallback(list, root); 
+    };
+    
+    /**
+     * @param {Array}   list   is an array of attribute names (w/o bracks)
+     * @param {Object=} root
      */
-     
-    api['queryData'] = QSA ? function (list, root) {// Modern browsers, IE8+
+    function queryAttrFallback (list, root) {// Get elems by attr name:
     
-        return queryEngine(toDataSelector(list), root); 
-        
-    } : function queryData(list, root) {// == FALLBACK ==
-    
-        // Convert keys to compact array of data-names:
-        list = datatizeAll(list); 
-        
-        // Get elems by attribute name:
-        var i, j, els, ret = [], alreadyAdded = [];
-        if ( !list.length ) { return ret; }
+        var j, i, e, els, l = list.length, ret = [], u = 0;
+        if ( !l ) { return ret; }
         els = queryEngine('*', root); // getElementsByTagName
-        for (j = 0; j < els.length; j++) {// each elem
-            for (i = 0; i < list.length && !alreadyAdded[j]; i++) {// each attr name
-                // `list` was already compacted by so we know
-                // that `list[i]` will be a truthy string:
-                if (els[j].getAttribute(list[i]) != null) {
-                    alreadyAdded[j] = ret.push(els[j]); // push returns truthy
+
+        for ( j = 0; (e = els[j]); j++ ) {// each elem
+            i = l; // reset i for each outer iteration
+            while ( i-- ) {// each attr name
+                if ( attr(e, list[i]) != null ) {
+                    ret[u++] = e; // ghetto push
+                    break; // prevent pushing same elem twice
                 }
             }
         }
 
         return ret;
-    };
-
-    // Expose top-level methods not already exposed:
-    api['qsa'] = queryEngine;
-    api['render'] = render;
-    api['dataset'] = dataset;
-    api['deletes'] = deletes;
-    api['camelize'] = camelize;
-    api['datatize'] = datatize;
-    api['toArray'] = toArray;
-    api['mapFilter'] = mapFilter;
-    api['toDataSelector'] = toDataSelector;
+    }
     
+    // Expose remaining top-level methods:
+    xports['qsa'] = queryEngine;
+    xports['attr'] = attr;
+    xports['trim'] = trim;
+    xports['parse'] = parse;
+    xports['dataset'] = dataset;
+    xports['deletes'] = deletes;
+    xports['camelize'] = camelize;
+    xports['datatize'] = datatize;
+    xports['removeAttr'] = removeAttr;
+    xports['map'] = map;
+    //xports['explode'] = explode;
+    //xports['implode'] = implode;
+
     /**
      * .dataset()
-     * @param   {Object|Array|string|number=} key
-     * @param   {*=}                          value
+     * @this    {Object|Array}
+     * @param   {*=}   k
+     * @param   {*=}   v
      */
-    api[FN]['dataset'] = fnDataset;
+    effins['dataset'] = function ( k, v ) {
+        
+        var kMulti = typeof k == 'object' && !(void 0 === v && datatize(k[0])) || typeof k == 'function';
+        if ( void 0 === v && !kMulti ) { return dataset(this[0], k); } // GET
+        kMulti || (k = datatize(k));
+        
+        return k ? eachNode(this, function (e, x) {
+            x = typeof v == 'function' ? v.call(e) : v;
+            kMulti ? dataset(e, k, x) : e.setAttribute(k, '' + x); 
+        }) : (void 0 === v ? v : this); // undefined|this
+        
+    };
+
+    /**
+     * .attr()
+     * @this    {Object|Array}
+     * @param   {*=}   k
+     * @param   {*=}   v
+     */    
+    effins['attr'] = function ( k, v ) {
+        
+        var kMulti = typeof k == 'object' || typeof k == 'function';
+        if ( void 0 === v && !kMulti ) { return attr(this[0], k); } // GET
+
+        return k ? eachNode(this, function (e, x) {
+            x = typeof v == 'function' ? v.call(e) : v;
+            kMulti ? attr(e, k, x) : e.setAttribute(k, '' + x); 
+        }) : (void 0 === v ? v : this); // undefined|this
+
+    };
+
+    /**
+     * .deletes()             Remove data- attrs for each element in a collection.
+     * @this  {Object|Array}
+     * @param {Array|string}  keys  one or more SSV or CSV data attr keys or names
+     */
+    effins['deletes'] = function (keys) {
+        if (void 0 === keys) { return eachNode(this, resetDataset); }
+        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
+        keys = typeof keys == 'object' ? map(keys, datatize) : datatize(keys);
+        return eachNode(this, removeAttr, keys);
+    };
+    /*effins['deletes'] = function (keys) {
+        if (void 0 === keys) { return eachNode(this, resetDataset); }
+        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
+        return eachNode(this, deletes, keys);
+    };*/
+    /*effins['deletes'] = function (keys) {
+        var i, mapped;
+        if (void 0 === keys) { return eachNode(this, resetDataset); }
+        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
+        if (typeof keys == 'object') {
+            i = keys.length;
+            mapped = [];
+            while ( i-- ) { mapped[i] = datatize(keys[i]); }
+        } else { keys = datatize(keys); }
+        return eachNode(this, removeAttr, keys);
+    };*/
     
     /**
-     * .deletes()     Remove data attributes for each element in a collection.
-     * @param {Array|string}  keys  one or more space-separated or comma-separated data attrs
+     * .removeAttr()          Remove attrbutes for each element in a collection.
+     * @this  {Object|Array}
+     * @param {Array|string}  keys  one or more SSV or CSV attr names
      */
-    api[FN]['deletes'] = function(keys) {
-        return deletes(this, keys);
-    };
-
-    /**
-     * noConflict()  Destroy the global and return the api. Optionally call 
-     *               a function that gets the api supplied as the first arg.
-     * @param        {function(*)=} callback   optional callback function
-     * @example      var localDomData = dope.noConflict();
-     * @example      dope.noConflict(function(dope){    });
-     */
-    api['noConflict'] = function(callback) {
-        root[name] = old;
-        typeof callback === 'function' && callback.call(root, api);
-        return api;
-    };
-
-    /**
-     * Special-case (internal) utility for augmenting a host with the api's methods.
-     * See usage from bridge()
-     * @param {Object|function(...)}    supplier   is the source of the methods
-     * @param {Object|function(...)}    receiver   is the host OR a prop on the host to add methods to
-     * @param {boolean=}                force      whether or not existing methods should be overwritten
-     */
-    function mixout(supplier, receiver, force) {// < signature is reverse of mixin
-        var name;
-        for (name in supplier) {
-            supplier.hasOwnProperty(name)
-            && (force || typeof receiver[name] === 'undefined')
-            && typeof supplier[name] === 'function' // methods only
-            && !supplier[name]['mute'] // see blacklist at bottom of page
-            && (receiver[name] = supplier[name]); // no remixes needed
-        }
-    }
-
-    /**
-     * bridge()       Handler for integrating (mixing out) methods into a host. It
-     *                augments the host with only the listed methods. If the host is
-     *                jQuery-compatible, then it'll also get the chainable methods.
-     *                Existing methods on the host are not overwritten unless the
-     *                force param is set to true.
-     * 
-     * @param {Object|function()}   host    any object or function
-     * @param {boolean=}            force   indicates whether existing methods on the host 
-     *                                      should be overwritten (default: false)
-     * @param {number=}             flag    1: top-level only, 2: effins only
-     */
-    api['bridge'] = function (host, force, flag) {
-        if (host instanceof Object) {
-            2 !== flag && mixout(api, host, force); // top-level
-            1 !== flag && typeof host === 'function' && host[FN] && mixout(api[FN], host[FN], force);
-        }
-        return api;
+    effins['removeAttr'] = function (keys) {
+        // split first to prevent splitting for each element
+        return eachNode(this, removeAttr, typeof keys == 'string' ? keys.split(ssv) : keys);
     };
     
-    // Mixout blacklist: specify that these methods are not designed to be bridged:
-    api['bridge']['mute'] = api['noConflict']['mute'] = true;
+    /**
+     * bridge()          Integrate applicable methods|objects into a host.
+     *                   Other types (number|string|undefined|boolean|null)
+     *                   are not bridged. `this` augments the receiver `r`
+     * @this  {Object|Function}           supplier
+     * @param {Object|Function}    r      receiver
+     * @param {boolean=}           force  whether to overwrite existing props (default: false)
+     * @param {(Object|Function)=} $      the top-level of the host api (default: `r`)
+     */
+    function bridge ( r, force, $ ) {
 
-    // Bridge into a host like jQuery or ender if one is there:
-    // The bridge returns the api:
-    return api['bridge'](host);
+        var k, relay, s = this; // s is the supplier
+        if ( r == null || s == null || s == win ) { return; }
+        force = true === force; // require explicit true to force
+
+        for ( k in s ) {
+            if ( typeof s[k] == 'function' && s[k]['relay'] !== false ) {
+                if ( force || r[k] == null ) {
+                    r[k] = s[k];
+                }
+            }
+        }
+        
+        r['fn'] && bridge.call(effins, r['fn'], force);
+        
+        return r; // receiver
+
+    }// bridge
+    
+    bridge['relay'] = false;
+    xports['bridge'] = bridge;
+
+    xports['fn'] = effins;
+
+    return xports;
 
 })); // factory and closure
