@@ -3,7 +3,9 @@
 ## 2.0.0 (2012-09-18)
 - Reorganized and improved much of the underlying code.
 - Removed wrapper function. `dope` is now an `[object Object]`. It still contains an `.fn` methods usable via `.call` or when integrated into a jQuery-compatible library.
-- Top-level dataset/attr methods are now "fast and simple" while the .fn versions are "full-feature" for collections.
+- Top-level dataset/attr methods are made "fast and simple" while the .fn versions remain "full-feature" for collections.
+- When setting attributes, the top-level `dope.dataset()` now returns the current value. (In v1.x it returned the element.)
+- Added "func arg" capabilities.
 - Renamed `dope.render()` to `dope.parse()` and added option to parse JSON.
 - Added `dope.attr()`/`dope.removeAttr()`/`dope.queryAttr()`
 - Added general purpose `dope.trim()` and `dope.map()` (to replace mapFilter)
