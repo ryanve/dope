@@ -1,10 +1,10 @@
 # CHANGELOG | [current](https://github.com/ryanve/dope/blob/master/dope.js)
 
-## 2.0.0 (2012-09-18)
+## [2.0.0](https://github.com/ryanve/dope/commit/4398e2cf62c9618633ae765f457654592cb6f958#dope.js) (2012-09-18)
 - Reorganized and improved much of the underlying code.
 - Removed wrapper function. `dope` is now an `[object Object]`. It still contains an `.fn` methods usable via `.call` or when integrated into a jQuery-compatible library.
-- Integration is no longer automatic. The bridge must be explicitly called, like `dope.bridge(jQuery)`
-- Top-level dataset/attr methods are made "fast and simple" while the .fn versions remain "full-feature" for collections.
+- Integration is no longer automatic—the bridge must be explicitly called: `dope.bridge(jQuery)`
+- Top-level dataset/attr methods are made "fast and simple" while the `.fn` versions remain "full-feature" for collections.
 - When setting attributes, the top-level `dope.dataset()` now returns the current value. (In v1.x it returned the element.)
 - Added "func arg" capabilities.
 - Renamed `dope.render()` to `dope.parse()` and added option to parse JSON.
