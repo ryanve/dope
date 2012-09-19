@@ -130,7 +130,7 @@ $.datatize(undefined)     // ''
 
 ### dope.bridge()
 
-The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. dope automatically augments [ender](http://ender.no.de) or [jQuery](http://jquery.com) at runtime if available. To integrate into other jQuery-compatible hosts, the bridge can be called manually as demonstrated below:
+The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. To integrate into jQuery or a jQuery-compatible host, call the bridge as demonstrated below:
 
 ```js
 dope.bridge($)       // integrate dope into $ (existing methods are not overwritten)
