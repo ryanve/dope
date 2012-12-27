@@ -1,2 +1,2 @@
-// bridge file for ender.no.de
-require('dope')['bridge'](ender);
+// bridge file for github.com/ender-js
+(require('dope')['bridge'](ender));
