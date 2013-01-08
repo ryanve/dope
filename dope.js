@@ -412,6 +412,9 @@
     xports['datatize'] = datatize;
     xports['removeAttr'] = removeAttr;
     xports['map'] = map;
+    xports['parseJSON'] = function (s) {
+        return parse(s, true);
+    };
 
     /**
      * .dataset()
