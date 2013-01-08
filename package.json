@@ -1,10 +1,20 @@
 {
     "name": "dope",
-    "description": "Cross-browser HTML5 dataset API",
-    "version": "2.0.0",
+    "description": "Cross-browser HTML5 dataset API. Includes jQuery-compatible attr and parseJSON methods.",
+    "version": "2.1.0",
     "homepage": "https://github.com/ryanve/dope",
     "author": "Ryan Van Etten <@ryanve>",
-    "keywords": ["dataset", "data", "html5", "dom", "jquery", "ender", "javascript", "js", "domdata"],
+    "keywords": [
+        "dataset",
+        "attributes",
+        "data",
+        "dom",
+        "ender",
+        "jquery",
+        "javascript",
+        "html5",
+        "domdata"
+    ],
     "main": "./dope.js",
     "ender": "./ender.js",
     "repository": {
