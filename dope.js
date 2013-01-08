@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     2.0.0 pre
+ * @version     2.0.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -91,19 +91,6 @@
             s = s.replace(cleanPre, '$1').replace(camels, '$1-$2'); // aA to a-A
         } else { s = typeof s == 'number'  ? '' + s : ''; }
         return s ? ('data-' + s.toLowerCase()) : s;
-    }
-
-    function implode ( list, delim ) {
-        if ( null == list ) { return ''; }
-        if ( typeof list != 'object' ) { return '' + list; }
-        return join.call(list, delim || ' ');
-    }
-
-    function explode ( list, delim ) {// returns same arr if already arr
-        if ( null == list ) { return []; }
-        if ( typeof list == 'object' && typeof list.length == 'number' ) { return list; }
-        if ( typeof list != 'string' ) { return [list]; } // func|bool|numb
-        return (list = list.split(delim || ssv))[0] ? list : []; // string
     }
 
     /**
@@ -424,8 +411,6 @@
     xports['datatize'] = datatize;
     xports['removeAttr'] = removeAttr;
     xports['map'] = map;
-    //xports['explode'] = explode;
-    //xports['implode'] = implode;
 
     /**
      * .dataset()
