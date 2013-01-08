@@ -1,5 +1,9 @@
 # CHANGELOG | [current](https://github.com/ryanve/dope/blob/master/dope.js)
 
+## [2.1.0](https://github.com/ryanve/dope/commit/1ddc1d2f8510e482c2c4bf5e71959c65388e4b17#dope.js) (2013-01-08)
+- Add `dope.parseJSON()` method for jQuery-compatible JSON-parsing syntax.
+- Remove `dope.bridge()` in favor of integration by other means, e.g. `dj.bridge()` or `ender.ender()` or `jQuery.extend()`.
+
 ## [2.0.0](https://github.com/ryanve/dope/commit/4398e2cf62c9618633ae765f457654592cb6f958#dope.js) (2012-09-18)
 - Reorganized and improved much of the underlying code.
 - Removed wrapper function. `dope` is now an `"object"`. It still contains an `.fn` methods usable via `.call` or via integration.
