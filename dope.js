@@ -152,6 +152,12 @@
         return ob;
     }
 
+    /**
+     * internal-use function to iterate a node's attributes
+     * @param {Object}        el
+     * @param {Function}      fn
+     * @param {(boolean|*)=}  dset
+     */
     function eachAttr (el, fn, dset) {
         var l, a, n, i = 0, prefix;
         if ( !el.attributes ) { return; }
