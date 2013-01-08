@@ -14,9 +14,10 @@
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
 , sub: true, white: true, indent: 4, maxerr: 180 */
 
-(function (root, name, factory) {
-    if (typeof module != 'undefined' && module.exports){ module.exports = factory(); } // node
-    else { root[name] = factory(); } // browser
+(function (root, name, definition) {// github.com/umdjs/umd
+    if (typeof module != 'undefined' && module.exports) { 
+        module.exports = definition();    // node / common / ender
+    } else { root[name] = definition(); } // browser
 }(this, 'dope', function () {
 
     // Array notation is used on property names that we don't want
