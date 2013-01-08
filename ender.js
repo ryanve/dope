@@ -1,2 +1,8 @@
-// bridge file for github.com/ender-js
-(require('dope')['bridge'](ender));
+/* bridge for ender.jit.su */
+(function ($, name) {
+    if ( !$ ) return;
+    var xport = require(name);
+    $['ender'](xport.fn, true);
+    for (name in xport)
+        'fn' == name || ($[name] = xport[name]);
+}(this['ender'], 'dope'));

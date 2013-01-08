@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     2.0.0
+ * @version     2.1.0 pre
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -15,7 +15,7 @@
 , sub: true, white: true, indent: 4, maxerr: 180 */
 
 (function (root, name, definition) {// github.com/umdjs/umd
-    if (typeof module != 'undefined' && module.exports) { 
+    if (typeof module != 'undefined' && module.exports) {
         module.exports = definition();    // node / common / ender
     } else { root[name] = definition(); } // browser
 }(this, 'dope', function () {
@@ -487,38 +487,6 @@
         // split first to prevent splitting for each element
         return eachNode(this, removeAttr, typeof keys == 'string' ? keys.split(ssv) : keys);
     };
-    
-    /**
-     * bridge()          Integrate applicable methods|objects into a host.
-     *                   Other types (number|string|undefined|boolean|null)
-     *                   are not bridged. `this` augments the receiver `r`
-     * @this  {Object|Function}           supplier
-     * @param {Object|Function}    r      receiver
-     * @param {boolean=}           force  whether to overwrite existing props (default: false)
-     * @param {(Object|Function)=} $      the top-level of the host api (default: `r`)
-     */
-    function bridge ( r, force, $ ) {
-
-        var k, relay, s = this; // s is the supplier
-        if ( r == null || s == null || s == win ) { return; }
-        force = true === force; // require explicit true to force
-
-        for ( k in s ) {
-            if ( typeof s[k] == 'function' && s[k]['relay'] !== false ) {
-                if ( force || r[k] == null ) {
-                    r[k] = s[k];
-                }
-            }
-        }
-        
-        r['fn'] && bridge.call(effins, r['fn'], force);
-        
-        return r; // receiver
-
-    }// bridge
-    
-    bridge['relay'] = false;
-    xports['bridge'] = bridge;
 
     xports['fn'] = effins;
 
