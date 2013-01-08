@@ -414,6 +414,11 @@
     // Expose remaining top-level methods:
     xports['map'] = map;
     xports['parse'] = parse;
+
+    /**
+     * @param  {string|*}  s
+     * @since  2.1.0
+     */
     xports['parseJSON'] = function (s) {
         return parse(s, true);
     };
