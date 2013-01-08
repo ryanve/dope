@@ -267,7 +267,8 @@
             }
         
         // integrate dope into $
-        dope.bridge($, true);
+        dope.bridge ? dope.bridge($, true) : dj.bridge.call(dope, $, true);
+
         
         log( window );
         log( dj.resample(dope) ); // top-level props

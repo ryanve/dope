@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     2.1.0 pre
+ * @version     2.1.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -26,7 +26,6 @@
     // developers.google.com/closure/compiler/docs/js-for-compiler
 
     var root = this
-      , win = window
       , doc = document
       , xports = {}
       , effins = {}
@@ -139,7 +138,12 @@
         return ret;
     }
     
-    // special-case iterator optimized for internal use
+    /** 
+     * special-case DOM-node iterator optimized for internal use
+     * @param {Object|Array}  ob
+     * @param {Function}      fn
+     * @param {*=}            param
+     */
     function eachNode (ob, fn, param) {
         var l = ob.length, i;
         for ( i = 0; i < l; i++ ) {
@@ -188,7 +192,11 @@
         }
         return ob; // Object|undefined
     }
-    
+
+    /**
+     * @param  {Object}   el
+     * @param  {Object=}  ob
+     */
     function resetDataset(el, ob) {
         if ( !el ) { return; }
         var n, curr = el.dataset;
@@ -210,7 +218,7 @@
     
     /**
      * @param  {Object|Array|Function}  el
-     * @param  {(string|Object)=}       k
+     * @param  {(string|Object|*)=}     k
      * @param  {*=}                     v
      */    
     function attr (el, k, v) {
@@ -237,7 +245,7 @@
     
     /**
      * @param  {Object|Array|Function}  el
-     * @param  {(string|Object)=}       k
+     * @param  {(string|Object|*)=}     k
      * @param  {*=}                     v
      */    
     function dataset (el, k, v) {
@@ -310,13 +318,15 @@
     /**
      * toDataSelector()          Converts ['aB', 'bA'] to '[data-a-b],[data-b-a]'
      *                           OR even ['[ data-a-b]', 'data-b-a'] to '[data-a-b],[data-b-a]'
-     * @param   {Array|string|number|*} list    array, key, or CSV or SSV string of data keys
-     * @return  {string}                selector string
+     *
+     * @param   {Array|string|number|*}  list
+     * @param   {boolean=}               prefix
+     * @param   {boolean=}               join
+     * @return  {string|Array}
      */
     //function toDataSelector(list) {
     //   return toAttrSelector(list, datatize);
     //}
-    
     function toAttrSelector(list, prefix, join) {
     
         if (typeof list == 'string') { list = list.split(csvSsv); }
@@ -345,10 +355,10 @@
     }
 
     /**
-     * queryData()                      Get elements by data key.
+     * queryData()                    Get elements matched by a data key.
      * 
-     * @param   {Object|string}  list   array or comma/space-separated data keys.
-     * @return  {Object}                array of elements
+     * @param   {Array|string}  list  array or comma/space-separated data keys.
+     * @return  {Array|*}
      */     
     xports['queryData'] = QSA ? function (list, root) {
         // Modern browsers, IE8+
@@ -362,10 +372,10 @@
     };
     
     /**
-     * queryAttr()                      Get elements by attribute name.
+     * queryAttr()                     Get elements matched by an attribute name.
      * 
-     * @param   {Object|string}  list   array or comma/space-separated data keys.
-     * @return  {Object}                array of elements
+     * @param   {Array|string}  list   array or comma/space-separated data keys.
+     * @return  {Array|*}
      */     
     xports['queryAttr'] = QSA ? function (list, root) {
         // Modern browsers, IE8+
@@ -379,8 +389,8 @@
     };
     
     /**
-     * @param {Array}   list   is an array of attribute names (w/o bracks)
-     * @param {Object=} root
+     * @param {Array|string}  list   is an array of attribute names (w/o bracks)
+     * @param {Object=}       root
      */
     function queryAttrFallback (list, root) {// Get elems by attr name:
     
@@ -402,19 +412,20 @@
     }
     
     // Expose remaining top-level methods:
+    xports['map'] = map;
+    xports['parse'] = parse;
+    xports['parseJSON'] = function (s) {
+        return parse(s, true);
+    };
+    xports['trim'] = trim;
     xports['qsa'] = queryEngine;
     xports['attr'] = attr;
-    xports['trim'] = trim;
-    xports['parse'] = parse;
+    xports['removeAttr'] = removeAttr;
     xports['dataset'] = dataset;
     xports['deletes'] = deletes;
     xports['camelize'] = camelize;
     xports['datatize'] = datatize;
-    xports['removeAttr'] = removeAttr;
-    xports['map'] = map;
-    xports['parseJSON'] = function (s) {
-        return parse(s, true);
-    };
+
 
     /**
      * .dataset()
