@@ -1,24 +1,26 @@
-[dope](http://github.com/ryanve/dope) - [2.0](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
+[dope](http://github.com/ryanve/dope) - [2.1](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
 =======
 
-dope is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for jQuery or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/dope/dope.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =]
+dope is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for [jQuery](http://jquery.com) or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/dope/dope.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =)
 
+**[CDN](http://airve.github.com)**: [dev](http://airve.github.com/js/dope/dope.js) | [min](http://airve.github.com/js/dope/dope.min.js)
 
-### notes
-
-In standalone usage, methods are available on the **dope** namespace: 
-
-```js
-dope.dataset(document.body, 'foo', 'bar');
+```
+$ npm install dope
 ```
 
-The docs below use `$` to denote `dope` or a host lib (like jQuery).
+## methods
 
-# methods
+In standalone usage, methods are available on the **dope** namespace. The docs below use `$` to denote `dope` or a host library like jQuery or ender.
 
-## chain
+```js
+dope.dataset(document.body, 'foo', 'bar'); // standalone
+$.dataset(document.body, 'foo', 'bar');    // integrated
+```
 
-### $.fn.dataset()
+### chain
+
+#### $.fn.dataset()
 
 ```js
 $(elem).dataset()           // get object containing all data attributes on elem (or 1st elem in set)
@@ -36,7 +38,7 @@ $('div').dataset('stars')                           // returns "5"
 $('div').dataset(['stars'])                         // returns 5
 ```
 
-### $.fn.deletes()
+#### $.fn.deletes()
 
 ```js
 $(elem).deletes(keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
@@ -46,9 +48,9 @@ $(elem).deletes(keys) // remove 1 or more space-separated data attrs from elem (
 $(document.body).deletes('movieName')      // remove [data-movie-name] from the <body> element
 ```
 
-## static
+### static
 
-### $.dataset()
+#### $.dataset()
 
 ```js
 $.dataset(elem )            // get object containing all data attrs on elem (or 1st elem in set)
@@ -64,7 +66,7 @@ $.dataset(document.body, 'movieName')               // returns "Pulp Fiction"
 ```
 
 
-### $.deletes()
+#### $.deletes()
 
 ```js
 $.deletes(elem, keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
@@ -74,7 +76,7 @@ $.deletes(elem, keys) // remove 1 or more space-separated data attrs from elem (
 $.deletes(document.body, 'movieName')      // remove [data-movie-name] from the <body> element
 ```
 
-### $.queryData()
+#### $.queryData()
 
 ```js
 $.queryData(keys)         // get elements by data key (keys can be an array or CSV or SSV string)
@@ -84,12 +86,20 @@ $.queryData(keys)         // get elements by data key (keys can be an array or C
 $.queryData('miaWallace vincentVega')  // Delegate to $("[data-mia-wallace],[data-vincent-vega]")
 ```
 
-### $.parse()
+#### $.trim()
 
 ```js
-$.parse(str) // Convert stringified primitives to correct value. (Non-strings are unchanged.)
-$.parse(str, true) // Parse JSON (in a safe wrapper that won't throw an error)
+$.trim(str) // Trim surrounding whitespace.
 ```
+
+#### $.parse()
+
+```js
+$.parse(str) // Convert stringified primitives to correct value. Non-strings are unchanged.
+$.parseJSON(str) // Parse JSON. Safely wraps `JSON.parse` so that it won't throw an error.
+```
+
+`$.parse` and `$.parseJSON` trim `"string"` inputs before parsing them.
 
 ```js
 $.parse('yo')        // 'yo'
@@ -101,7 +111,7 @@ $.parse('Infinity')  // Infinity
 $.parse('NaN')       // NaN
 ```
 
-### $.camelize()
+#### $.camelize()
 
 ```js
 $.camelize(str)       // convert a dashed data- string into camelCase
@@ -113,7 +123,7 @@ $.camelize('mia-wallace')       // 'miaWallace'
 $.camelize(47)                  // '47'
 ```
 
-### $.datatize()
+#### $.datatize()
 
 ```js
 $.datatize(str)       // convert a camelized string into a lowercase dashed data- attribute name
@@ -128,30 +138,17 @@ $.datatize('')            // ''
 $.datatize(undefined)     // ''
 ```
 
-### dope.bridge()
-
-The bridge handles the integration of methods into a host. It augments the host with the above-detailed methods. To integrate into jQuery or a jQuery-compatible host, call the bridge as demonstrated below:
-
-```js
-dope.bridge($)       // integrate dope into $ (existing methods are not overwritten)
-dope.bridge($, true) // integrate dope into $ (overwriting existing methods, if any)
-```
-
-# [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
+## [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
 
 ```js
 define('dope', function(){ return dope; });
 ```
 
-# Compatibility
+## compatibility
 
-Supports all major browsers. (Tested in Chrome / FF3+ / IE7+ / Opera / Safari)
+Supports all major browsers. Tested in Chrome / FF3+ / IE7+ / Opera / Safari.
 
-# CDN
-
-dope is available on [airve.github.com](http://airve.github.com/)
-
-# License
+## license
 
 ### [dope](http://github.com/ryanve/dope) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
 
