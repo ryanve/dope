@@ -60,28 +60,25 @@
         };
     
     /**
-     * camelize()         Convert  'data-pulp-fiction' to 'pulpFiction'. This method only
-     *                    deals w/ scalar types. Numbers turn into strings. Non-scalar
-     *                    inputs become an empty string. (datatize() is the opposite of camelize())
+     * camelize()    Convert  'data-pulp-fiction' to 'pulpFiction'. Non-scalars return an
+     *               empty string. number|boolean coerces to string. ( opposite: datatize() )
      * 
      * @param   {string|number|boolean|*}  s
      * @return  {string}
      */
     function camelize (s) {
-        // Remove data- prefix and convert remaining dashed string to camelCase:
-        // Only deal w/ strings|numbers|booleans. Other types return empty string:
-        if ( typeof s != 'string' ) {// convert into string (`7` to `'7'`)
+        if ( typeof s != 'string' ) {
             return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
         }
+        // remove data- prefix and convert remaining dashed string to camelCase:
         return s.replace(cleanPre, '').replace(dashB4, function (m, m1) { 
             return m1.toUpperCase(); // -a to A
         }); 
     }
 
     /**
-     * datatize()         Convert  'pulpFiction' to 'data-pulp-fiction' OR 47 to 'data-47'
-     *                    This method only deals w/ scalar types. Other inputs return
-     *                    an empty string. (datatize() is the opposite of camelize())
+     * datatize()    Convert  'pulpFiction' to 'data-pulp-fiction' OR 47 to 'data-47'
+     *               Invalid types return an empty string. ( opposite: camelize() )
      * 
      * @param   {string|number|*}  s
      * @return  {string}
@@ -108,8 +105,9 @@
         if ( 'false' === s ) { return false; }
         if ( 'null' === s ) { return null; }
         
-        // undefined|number
-        if ( 'undefined' === s || (n = (+s)) || 0 === n || 'NaN' === s ) { return n; }
+        if ( 'undefined' === s || (n = (+s)) || 0 === n || 'NaN' === s ) { 
+            return n; // undefined|number
+        }
         
         if ( json === true ) {
             try { s = parseJSON(s); }
@@ -176,9 +174,10 @@
     }
 
     /**
-     * getDataset()               Get object containing all the data attrs on an element.
-     *                            (not part of the public api - used in dataset() and fnDataset())
-     * @param  {Object} el        a *native* element
+     * getDataset()        Get object containing all the data attrs on an element.
+     *                     Not part of the public API. See usage in dataset() and fnDataset()
+     *
+     * @param  {Object}    el     a native DOM element
      * @return {Object|undefined}
      */
     function getDataset(el) {
@@ -293,10 +292,12 @@
         el = el.nodeType ? el : el[0];
         
         if ( !el || !el.removeAttribute ) { return; }
-        if ( void 0 === keys ) { return resetDataset(el); }
+        if ( void 0 === keys ) { 
+            return resetDataset(el); 
+        }
         
         keys = typeof keys == 'string' 
-             ? keys.split(ssv) 
+             ? keys.split(ssv)
              : typeof keys != 'object' ? [keys] : keys;
              
         while ( i < keys.length ) {
@@ -350,13 +351,12 @@
         if ( join === false ) {
             return arr; 
         }
-        
-        // Escape periods b/c we're not dealing with classes. Periods are 
-        // valid in data attribute names. <p data-the.wh_o="totally valid">
-        // See api.jquery.com/category/selectors/ about escapes. The same 
-        // goes for QSA. Here we're only concerned w/ the chars of those
-        // that are valid in data attr keys--just periods. Dashes+underscores
-        // are valid too but they don't need to be escaped.
+
+        // Escape periods b/c they are valid in attribute names.
+        // jQuery and QSA require special chars to be escaped.
+        // Allows valid usage like: <p data-the.wh_o="totally valid">
+        // @link api.jquery.com/category/selectors/
+        // @link stackoverflow.com/q/13283699/770127
         return j ? '[' + arr.join('],[').replace(escDots, '\\\\.') + ']' : emp;
     }
 
@@ -464,10 +464,11 @@
      * @param   {*=}   v
      */    
     effins['attr'] = function ( k, v ) {
-        
-        var kMulti = typeof k == 'object' || typeof k == 'function';
-        if ( void 0 === v && !kMulti ) { return attr(this[0], k); } // GET
 
+        var kMulti = typeof k == 'object' || typeof k == 'function';
+        if ( void 0 === v && !kMulti ) {
+            return attr(this[0], k); // GET
+        }
         return k ? eachNode(this, function (e, x) {
             x = typeof v == 'function' ? v.call(e) : v;
             kMulti ? attr(e, k, x) : e.setAttribute(k, '' + x); 
@@ -486,22 +487,12 @@
         keys = typeof keys == 'object' ? map(keys, datatize) : datatize(keys);
         return eachNode(this, removeAttr, keys);
     };
-    /*effins['deletes'] = function (keys) {
+    /* or:
+    effins['deletes'] = function (keys) {
         if (void 0 === keys) { return eachNode(this, resetDataset); }
         keys = typeof keys == 'string' ? keys.split(ssv) : keys;
         return eachNode(this, deletes, keys);
-    };*/
-    /*effins['deletes'] = function (keys) {
-        var i, mapped;
-        if (void 0 === keys) { return eachNode(this, resetDataset); }
-        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
-        if (typeof keys == 'object') {
-            i = keys.length;
-            mapped = [];
-            while ( i-- ) { mapped[i] = datatize(keys[i]); }
-        } else { keys = datatize(keys); }
-        return eachNode(this, removeAttr, keys);
-    };*/
+    }; */
     
     /**
      * .removeAttr()          Remove attrbutes for each element in a collection.
@@ -517,4 +508,4 @@
 
     return xports;
 
-})); // factory and closure
+}));
