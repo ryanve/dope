@@ -1,8 +1,9 @@
 /* bridge for ender.jit.su */
 (function ($, name) {
-    if ( !$ ) return;
+    if (!$ || typeof require != 'function')
+        return;
     var xport = require(name);
-    $['ender'](xport.fn, true);
+    $['ender'](xport['fn'], true);
     for (name in xport)
-        'fn' == name || ($[name] = xport[name]);
+        'fn' == name || ($[name] = xport[name]);    
 }(this['ender'], 'dope'));
