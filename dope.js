@@ -6,7 +6,7 @@
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
- * @version     2.1.0
+ * @version     2.1.1
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -59,6 +59,10 @@
             return null == s ? '' : s.replace(trimmer, ''); 
         };
     
+    function camelHandler ( all, letter ) { 
+        return letter.toUpperCase();
+    }
+
     /**
      * camelize()    Convert  'data-pulp-fiction' to 'pulpFiction'. Non-scalars return an
      *               empty string. number|boolean coerces to string. ( opposite: datatize() )
@@ -69,11 +73,8 @@
     function camelize (s) {
         if ( typeof s != 'string' ) {
             return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
-        }
-        // remove data- prefix and convert remaining dashed string to camelCase:
-        return s.replace(cleanPre, '').replace(dashB4, function (m, m1) { 
-            return m1.toUpperCase(); // -a to A
-        }); 
+        } // Remove data- prefix and convert remaining dashed string to camelCase:
+        return s.replace(cleanPre, '').replace(dashB4, camelHandler); // -a to A
     }
 
     /**
