@@ -1,7 +1,7 @@
 [dope](http://github.com/ryanve/dope) - [2.1](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
 =======
 
-dope is an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that works as a standalone lib or as a plugin for [jQuery](http://jquery.com) or jQuery-compatible hosts. It runs screamin-fast, cross-browser, [gzips < 2k](http://airve.github.com/js/dope/dope.min.js), and mimics the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) / [native implementation](http://dev.opera.com/articles/view/an-introduction-to-datasets/) as much as possible. Got data? =)
+[dope](http://github.com/ryanve/dope) is cross-browser JavaScript module for working with HTML attributes. It includes an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that adheres to the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes). It works standalone or can integrate into jQuery-compatible hosts. It runs screamin-fast and [gzips < 2k](http://airve.github.com/js/dope/dope.min.js). Got data? =)
 
 **[CDN](http://airve.github.com)**: [dev](http://airve.github.com/js/dope/dope.js) | [min](http://airve.github.com/js/dope/dope.min.js)
 

@@ -1,7 +1,5 @@
 /*!
- * dope         HTML5 dataset API abstraction that works as a standalone
- *              lib or integrates into any jQuery-compatible host. It runs
- *              screamin-fast, cross-browser, and gzips < 2k. Got data? =]
+ * dope         HTML attributes/dataset module
  * @link        http://github.com/ryanve/dope
  * @license     MIT
  * @copyright   2012 Ryan Van Etten
