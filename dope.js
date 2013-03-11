@@ -203,7 +203,7 @@
         ob && dataset(el, ob);
     }
     
-    function setViaObject (el, ob, fn) {
+    function setViaObject(el, ob, fn) {
         var n;
         for (n in ob) {
             owns.call(ob, n) && fn(el, n, ob[n]);
@@ -339,13 +339,12 @@
      */     
     xports['queryData'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
-        if (root === false) { return toAttrSelector(list, true, root); }
+        if (false === root) { return toAttrSelector(list, true, root); }
         return queryEngine(toAttrSelector(list, true), root); 
 
     } : function(list, root) {// == FALLBACK ==
         list = toAttrSelector(list, true, false);
-        if (root === false) { return list; }
-        return queryAttrFallback(list, root); 
+        return false === root ? list : queryAttrFallback(list, root); 
     };
     
     /**
@@ -360,8 +359,7 @@
 
     } : function(list, root) {// == FALLBACK ==
         list = toAttrSelector(list, false, false);
-        if (root === false) { return list; }
-        return queryAttrFallback(list, root); 
+        return false === root ? list : queryAttrFallback(list, root); 
     };
     
     /**
