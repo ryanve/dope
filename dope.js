@@ -354,7 +354,7 @@
      */     
     xports['queryAttr'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
-        if (root === false) { return toAttrSelector(list, root, root); }
+        if (false === root) { return toAttrSelector(list, root, root); }
         return queryEngine(toAttrSelector(list), root); 
 
     } : function(list, root) {// == FALLBACK ==
@@ -409,7 +409,7 @@
      * @param   {*=}   v
      */
     effins['dataset'] = function(k, v) {
-        var kMulti = typeof k == 'object' && !(void 0 === v && datatize(k[0])) || typeof k == 'function';
+        var kMulti = typeof k == 'object' ? !(void 0 === v && datatize(k[0])) : typeof k == 'function';
         if (void 0 === v && !kMulti) {
             return dataset(this[0], k); // GET
         } 
