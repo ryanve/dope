@@ -1,7 +1,7 @@
 {
     "name": "dope",
     "description": "HTML5 dataset/attributes module.",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "homepage": "https://github.com/ryanve/dope",
     "author": "Ryan Van Etten <ryanve@gmail.com> (http://ryanve.com)",
     "keywords": ["dataset", "attributes", "data", "dom", "ender"],
