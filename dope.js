@@ -2,7 +2,6 @@
  * dope         HTML5 dataset API abstraction that works as a standalone
  *              lib or integrates into any jQuery-compatible host. It runs
  *              screamin-fast, cross-browser, and gzips < 2k. Got data? =]
- *
  * @author      Ryan Van Etten (c) 2012
  * @link        http://github.com/ryanve/dope
  * @license     MIT
@@ -15,8 +14,8 @@
 , sub: true, white: true, indent: 4, maxerr: 180 */
 
 (function(root, name, definition) {// github.com/umdjs/umd
-    if (typeof module != 'undefined' && module.exports) {
-        module.exports = definition();    // node / common / ender
+    if (typeof module != 'undefined' && module['exports']) {
+        module['exports'] = definition(); // node|common|ender
     } else { root[name] = definition(); } // browser
 }(this, 'dope', function() {
 
