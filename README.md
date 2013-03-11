@@ -20,14 +20,28 @@ $.dataset(document.body, 'foo', 'bar');    // integrated
 
 ### chain
 
+#### $.fn.attr()
+
+```js
+$(elem).attr(key)        // get attribute on elem (or 1st elem in collection)
+$(elem).attr(key, value) // set attribute on elem (or on collection)
+$(elem).attr(object)     // set multiple attributes via key/value pairs
+```
+
+#### $.fn.removeAttr()
+
+```js
+$(elem).removeAttr(keys) // remove 1 or more SSV attributes from elem or collection
+```
+
 #### $.fn.dataset()
 
 ```js
-$(elem).dataset()           // get object containing all data attributes on elem (or 1st elem in set)
-$(elem).dataset(key)        // get data attribute on elem (or 1st elem in set)
-$(elem).dataset(key, value) // set data attribute on elem (or on all the elems in set)
-$(elem).dataset(object)     // set multiple data attributes via an object's key/value pairs
-$(elem).dataset([key])      // get [exact] data attribute (primitives render to correct type)
+$(elem).dataset()           // get all data-* attributes on elem (or 1st elem in collection)
+$(elem).dataset(key)        // get data-* attribute on elem (or 1st elem in collection)
+$(elem).dataset(key, value) // set data-* attribute on elem (or on collection)
+$(elem).dataset(object)     // set multiple data-* attributes via key/value pairs
+$(elem).dataset([key])      // get [exact] data-* attribute (primitives render to correct type)
 ```
 
 ```js
@@ -41,7 +55,7 @@ $('div').dataset(['stars'])                         // returns 5
 #### $.fn.deletes()
 
 ```js
-$(elem).deletes(keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
+$(elem).deletes(keys) // remove 1 or more SSV data-* attributes from elem or collection
 ```
 
 ```js
@@ -50,14 +64,28 @@ $(document.body).deletes('movieName')      // remove [data-movie-name] from the 
 
 ### static
 
+#### $.attr()
+
+```js
+$.attr(elem, key)        // get attribute on elem
+$.attr(elem, key, value) // set attribute on elem
+$.attr(elem, object)     // set multiple attributes via key/value pairs
+```
+
+#### $.removeAttr()
+
+```js
+$.removeAttr(elem, keys) // remove 1 or more SSV attributes from elem (or from collection)
+```
+
 #### $.dataset()
 
 ```js
-$.dataset(elem )            // get object containing all data attrs on elem (or 1st elem in set)
-$.dataset(elem, key)        // get data attribute on elem (or 1st elem in set)
-$.dataset(elem, key, value) // set data attribute on elem (or on all the elems in set)
-$.dataset(elem, object)     // set multiple data attributes via key/value pairs
-$.dataset(elem, [key])      // get [exact] data attribute (primitives render to correct type)
+$.dataset(elem)             // get all data-* attrs on elem
+$.dataset(elem, key)        // get data-* attribute on elem
+$.dataset(elem, key, value) // set data-* attribute on elem
+$.dataset(elem, object)     // set multiple data-* attributes via key/value pairs
+$.dataset(elem, [key])      // get [exact] data-* attribute (primitives parse to correct type)
 ```
 
 ```js
@@ -65,21 +93,20 @@ $.dataset(document.body, 'movieName', Pulp Fiction) // set <body data-movie-name
 $.dataset(document.body, 'movieName')               // returns "Pulp Fiction"
 ```
 
-
 #### $.deletes()
 
 ```js
-$.deletes(elem, keys) // remove 1 or more space-separated data attrs from elem (or all elems in set)
+$.deletes(elem, keys) // remove 1 or more SSV data-* attributes from elem (or from collection)
 ```
 
 ```js
-$.deletes(document.body, 'movieName')      // remove [data-movie-name] from the <body> element
+$.deletes(document.body, 'movieName')  // remove [data-movie-name] from the <body> element
 ```
 
 #### $.queryData()
 
 ```js
-$.queryData(keys)         // get elements by data key (keys can be an array or CSV or SSV string)
+$.queryData(keys)  // get elements by data key (keys can be an array or CSV or SSV string)
 ```
 
 ```js
@@ -141,7 +168,9 @@ $.datatize(undefined)     // ''
 ## [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) usage
 
 ```js
-define('dope', function(){ return dope; });
+define('dope', function() { 
+    return dope; 
+});
 ```
 
 ## compatibility
