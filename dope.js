@@ -3,7 +3,7 @@
  * @link        http://github.com/ryanve/dope
  * @license     MIT
  * @copyright   2012 Ryan Van Etten
- * @version     2.1.1
+ * @version     2.2.0
  */
 
 /*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
@@ -11,9 +11,9 @@
 , nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
 , sub: true, white: true, indent: 4, maxerr: 180 */
 
-(function(root, name, definition) {// github.com/umdjs/umd
+(function(root, name, definition) {
     if (typeof module != 'undefined' && module['exports']) {
-        module['exports'] = definition(); // node|common|ender
+        module['exports'] = definition(); // common|node|ender
     } else { root[name] = definition(); } // browser
 }(this, 'dope', function() {
 
@@ -87,25 +87,17 @@
     }
 
     /**
-     * Convert a stringified primitive back to its 
-     * correct type. OR parse JSON in a safe way.
+     * Convert a stringified primitive into its correct type.
      * @param {string|*}  s
-     * @param {boolean=}  json
      */
-    function parse(s, json) {
-        var n; // <= initially undefined
-        if (typeof s != 'string' || !(s = trim(s))) { return s; }
-        if ('true' === s) { return true; }
-        if ('false' === s) { return false; }
-        if ('null' === s) { return null; }
-        if ('undefined' === s || (n = (+s)) || 0 === n || 'NaN' === s) { 
-            return n; // undefined|number
-        }
-        if (true === json) {
-            try { s = parseJSON(s); }
-            catch (e) {}
-        }
-        return s;
+    function parse(s) {
+        var n; // undefined, or becomes number
+        return typeof s != 'string' || !s ? s
+            : 'false' === s ? false
+            : 'true' === s ? true
+            : 'null' === s ? null
+            : 'undefined' === s || (n = (+s)) || 0 === n || 'NaN' === s ? n
+            : s;
     }
 
     /**
@@ -389,7 +381,13 @@
      * @since  2.1.0
      */
     xports['parseJSON'] = function(s) {
-        return parse(s, true);
+        s = parse(s);
+        if (typeof s == 'string') {
+            try {
+                s = parseJSON(trim(s));
+            } catch (e) {}
+        }
+        return s;
     };
 
     xports['trim'] = trim;
