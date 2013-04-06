@@ -1,5 +1,8 @@
 # CHANGELOG | [current](https://github.com/ryanve/dope/blob/master/dope.js)
 
+## [2.2.0](https://github.com/ryanve/dope/commit/7d9e787029a68e50893009424b7c4ae31717491c) (2013-04-06)
+- Remove [undocumented 2nd param](https://github.com/ryanve/dope/commit/7d9e787029a68e50893009424b7c4ae31717491c) from `dope.parse()`.
+
 ## [2.1.0](https://github.com/ryanve/dope/commit/1ddc1d2f8510e482c2c4bf5e71959c65388e4b17#dope.js) (2013-01-08)
 - Add `dope.parseJSON()` method for jQuery-compatible JSON-parsing syntax.
 - Remove `dope.bridge()` in favor of integration by other means, e.g. `dj.bridge()` or `ender.ender()` or `jQuery.extend()`.
