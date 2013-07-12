@@ -3,51 +3,36 @@
  * @link        http://github.com/ryanve/dope
  * @license     MIT
  * @copyright   2012 Ryan Van Etten
- * @version     2.2.0
+ * @version     2.2.1
  */
 
-/*jslint browser: true, devel: true, node: true, passfail: false, bitwise: true
-, continue: true, debug: true, eqeq: true, es5: true, forin: true, newcap: true
-, nomen: true, plusplus: true, regexp: true, undef: true, sloppy: true, stupid: true
-, sub: true, white: true, indent: 4, maxerr: 180 */
+/*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
+  laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
 
-(function(root, name, definition) {
-    if (typeof module != 'undefined' && module['exports']) {
-        module['exports'] = definition(); // common|node|ender
-    } else { root[name] = definition(); } // browser
+(function(root, name, make) {
+    typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'dope', function() {
 
-    // Array notation is used on property names that we don't want
-    // closure-compiler.appspot.com to rename in the advanced mode. 
     // developers.google.com/closure/compiler/docs/api-tutorial3
     // developers.google.com/closure/compiler/docs/js-for-compiler
 
-    var root = this
-      , doc = document
+    var doc = document
       , xports = {}
-      , effins = {}
+      , effins = xports['fn'] = {}
+      , owns = xports.hasOwnProperty
       , DMS = typeof DOMStringMap != 'undefined'
-      , AP = Array.prototype
-      , OP = Object.prototype
-      , slice = AP.slice
-      , push = AP.push
-      , join = AP.join
-      , owns = OP.hasOwnProperty
-      , toString = OP.toString
-      , JSON = root['JSON']
-      , parseJSON = !!JSON && JSON.parse
+      , parseJSON = typeof JSON != 'undefined' && JSON.parse
       , queryMethod = 'querySelectorAll' 
       , QSA = !!doc[queryMethod] || !(queryMethod = 'getElementsByTagName')
       , queryEngine = function(s, root) {
             return s ? (root || doc)[queryMethod](s) : []; 
         }
-      , camels = /([a-z])([A-Z])/g          // lowercase next to uppercase
-      , dashB4 = /-(.)/g                    // finds chars after hyphens
-      , csvSsv = /\s*[\s\,]+\s*/          // splitter for comma *or* space-separated values
+      , camels = /([a-z])([A-Z])/g            // lowercase next to uppercase
+      , dashB4 = /-(.)/g                      // finds chars after hyphens
+      , csvSsv = /\s*[\s\,]+\s*/              // splitter for comma *or* space-separated values
       , cleanAttr = /^[\[\s]+|\s+|[\]\s]+$/g  // replace whitespace, trim [] brackets
-      , cleanPre = /^[\[\s]?(data-)?|\s+|[\]\s]?$/g  // replace whitespace, trim [] brackets, trim prefix
-      , escDots = /\\*\./g               // find periods w/ and w/o preceding backslashes
-      , alphaNum = /^[a-z0-9]+$/i
+      , cleanPre = /^[\[\s]?(data-)?|\s+|[\]\s]?$/g // replace whitespace, trim [] brackets, trim prefix
+      , escDots = /\\*\./g                    // find periods w/ and w/o preceding backslashes
       , ssv = /\s+/
       , trimmer = /^\s+|\s+$/
       , trim = ''.trim ? function(s) {
@@ -56,6 +41,9 @@
             return null == s ? '' : s.replace(trimmer, ''); 
         };
     
+    /**
+     * @return  {string}
+     */
     function camelHandler(all, letter) { 
         return letter.toUpperCase();
     }
@@ -67,9 +55,9 @@
      * @return  {string}
      */
     function camelize(s) {
-        if (typeof s != 'string') {
+        if (typeof s != 'string')
             return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
-        } // Remove data- prefix and convert remaining dashed string to camelCase:
+        // Remove data- prefix and convert remaining dashed string to camelCase:
         return s.replace(cleanPre, '').replace(dashB4, camelHandler); // -a to A
     }
 
@@ -80,9 +68,8 @@
      * @return  {string}
      */
     function datatize(s) {
-        if (typeof s == 'string') {
-            s = s.replace(cleanPre, '$1').replace(camels, '$1-$2'); // aA to a-A
-        } else { s = typeof s == 'number'  ? '' + s : ''; }
+        if (typeof s == 'string') s = s.replace(cleanPre, '$1').replace(camels, '$1-$2'); // aA to a-A
+        else s = typeof s == 'number'  ? '' + s : '';
         return s ? ('data-' + s.toLowerCase()) : s;
     }
 
@@ -109,12 +96,11 @@
      */
     function map(list, fn, scope, compact) {
         var l, i = 0, v, u = 0, ret = [];
-        if (list == null) { return ret; }
+        if (list == null) return ret;
         compact = true === compact;
-        l = list.length;
-        while (i < l) {
+        for (l = list.length; i < l;) {
             v = fn.call(scope, list[i], i++, list);
-            if (v || !compact) { ret[u++] = v; }
+            if (v || !compact) ret[u++] = v;
         }
         return ret;
     }
@@ -126,10 +112,8 @@
      * @param {*=}            param
      */
     function eachNode(ob, fn, param) {
-        var l = ob.length, i;
-        for (i = 0; i < l; i++) {
+        for (var l = ob.length, i = 0; i < l; i++)
             ob[i] && ob[i].nodeType && fn(ob[i], param);
-        }
         return ob;
     }
 
@@ -137,40 +121,30 @@
      * internal-use function to iterate a node's attributes
      * @param {Object}        el
      * @param {Function}      fn
-     * @param {(boolean|*)=}  dset
+     * @param {(boolean|*)=}  exp
      */
-    function eachAttr(el, fn, dset) {
-        var l, a, n, i = 0, prefix;
-        if (!el.attributes) { return; }
-        if (typeof dset == 'boolean') {
-            prefix = /^data-/;
-        } else { dset = null; }
-        l = el.attributes.length;
-        while (i < l) {
+    function eachAttr(el, fn, exp) {
+        var test, n, a, i, l;
+        if (!el.attributes) return;
+        test = typeof exp == 'boolean' ? /^data-/ : test;
+        for (i = 0, l = el.attributes.length; i < l;) {
             if (a = el.attributes[i++]) {
                 n = '' + a.name;
-                if (dset == null || prefix.test(n) === dset) {
-                    null == a.value || fn.call(el, a.value, n, a);
-                }
+                test && test.test(n) !== exp || null == a.value || fn.call(el, a.value, n, a);
             }
         }
     }
 
     /**
      * Get object containing an element's data attrs.
-     * @param  {Node}    el     a DOM element
-     * @return {Object|undefined}
+     * @param  {Node}  el
+     * @return {DOMStringMap|Object|undefined}
      */
     function getDataset(el) {
-        var i, a, n, ob;
-        if (!el || 1 !== el.nodeType) { return; }
-        // Use the native dataset when avail:
-        if (DMS && (ob = el.dataset)) { 
-            return ob; 
-        }
-        // Fallback gets a cloned plain object that
-        // cannot mutate the dataset via reference
-        ob = {};
+        var ob;
+        if (!el || 1 !== el.nodeType) return;  // undefined
+        if (ob = DMS && el.dataset) return ob; // native
+        ob = {}; // Fallback plain object cannot mutate the dataset via reference.
         eachAttr(el, function(v, k) {
             ob[camelize(k)] = '' + v;
         }, true);
@@ -178,26 +152,27 @@
     }
 
     /**
-     * @param  {Object}   el
+     * @param  {Node}     el
      * @param  {Object=}  ob
      */
     function resetDataset(el, ob) {
-        if (!el) { return; }
+        if (!el) return;
         var n, curr = el.dataset;
         if (curr && DMS) {
-            if (curr === ob) { return; }
-            for (n in curr) { 
-                delete curr[n]; 
-            }
+            if (curr === ob) return;
+            for (n in curr) delete curr[n];
         }
         ob && dataset(el, ob);
     }
     
+    /**
+     * @param  {Node}      el
+     * @param  {Object}    ob
+     * @param  {Function}  fn
+     */
     function setViaObject(el, ob, fn) {
-        var n;
-        for (n in ob) {
+        for (var n in ob)
             owns.call(ob, n) && fn(el, n, ob[n]);
-        }
     }
     
     /**
@@ -206,20 +181,20 @@
      * @param  {*=}                     v
      */    
     function attr(el, k, v) {
-
         el = el.nodeType ? el : el[0];
-        if (!el || !el.setAttribute) { return; }
+        if (!el || !el.setAttribute) return;
         k = typeof k == 'function' ? k.call(el) : k;
-        if (!k) { return; }
-
-        if (typeof k == 'object') {// SET-multi
+        if (!k) return;
+        if (typeof k == 'object') {
+            // SET-multi
             setViaObject(el, k, attr);
         } else {
-            if (void 0 === v) {// GET
-                k = el.getAttribute(k); // repurpose `k`
+            if (void 0 === v) {
+                // GET
+                k = el.getAttribute(k); // repurpose
                 return null == k ? v : '' + k; // normalize
             }
-            // SET:
+            // SET
             v = typeof v == 'function' ? v.call(el) : v;
             v = '' + v; // normalize inputs
             el.setAttribute(k, v);
@@ -235,10 +210,8 @@
     function dataset(el, k, v) {
         var exact, kFun = typeof k == 'function';
         el = el.nodeType ? el : el[0];
-        if (!el || !el.setAttribute) { return; }
-        if (void 0 === k && v === k) {
-            return getDataset(el); 
-        }
+        if (!el || !el.setAttribute) return;
+        if (void 0 === k && v === k) return getDataset(el);
         k = kFun ? k.call(el) : k;
 
         if (typeof k == 'object' && (kFun || !(exact = void 0 === v && datatize(k[0])))) {
@@ -247,52 +220,51 @@
             k && setViaObject(el, k, dataset);
         } else {
             k = exact || datatize(k);
-            if (!k) { return; }
-            if (void 0 === v) {// GET
-                k = el.getAttribute(k); // repurpose `k`
+            if (!k) return;
+            if (void 0 === v) {
+                // GET
+                k = el.getAttribute(k); // repurpose
                 return null == k ? v : exact ? parse(k) : '' + k; // normalize
             }
             // SET
             v = typeof v == 'function' ? v.call(el) : v;
             v = '' + v; // normalize inputs
             el.setAttribute(k, v);
-            return v; // the curr value
+            return v; // current value
         }
     }
 
     /**
-     * @param  {Object}                  el
-     * @param  {(Array|string|number)=}  keys
+     * @param  {Node}                   el
+     * @param  {(Array|string|number)=} keys
      */
     function deletes(el, keys) {
         var k, i = 0;
         el = el.nodeType ? el : el[0];
-        if (!el || !el.removeAttribute) { return; }
-        if (void 0 === keys) { 
-            return resetDataset(el); 
-        }
-        keys = typeof keys == 'string' 
-             ? keys.split(ssv)
-             : typeof keys != 'object' ? [keys] : keys;
-             
-        while (i < keys.length) {
-            k = datatize(keys[i++]);
-            k && el.removeAttribute(k);
+        if (!el || !el.removeAttribute)
+            return;
+        if (void 0 === keys) {
+            resetDataset(el); 
+        } else {
+            keys = typeof keys == 'string' ? keys.split(ssv) : [].concat(keys);
+            while (i < keys.length) {
+                k = datatize(keys[i++]);
+                k && el.removeAttribute(k);
+            }
         }
     }
     
     /**
-     * @param  {Object}                  el
-     * @param  {(Array|string|number)=}  keys
+     * @param  {Node}                el
+     * @param  {Array|string|number} keys
      */
     function removeAttr(el, keys) {
-        var k, i = 0;
+        var i = 0;
         el = el.nodeType ? el : el[0];
-        if (!keys || !el || !el.removeAttribute) { return; }
-        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
-        while (i < keys.length) {
-            k = keys[i++];
-            k && el.removeAttribute(k);
+        if (el && el.removeAttribute) {
+            for (keys = typeof keys == 'string' ? keys.split(ssv) : [].concat(keys); i < keys.length; i++) {
+                keys[i] && el.removeAttribute(keys[i]);
+            }
         }
     }
 
@@ -304,22 +276,18 @@
      * @return  {string|Array}
      */
     function toAttrSelector(list, prefix, join) {
-        var l, i = 0, j = 0, emp = '', arr = [];
+        var l, s, i = 0, j = 0, emp = '', arr = [];
         prefix = true === prefix;
         list = typeof list == 'string' ? list.split(csvSsv) : typeof list == 'number' ? '' + list : list;
-        l = list.length;
-        while (i < l) {
+        for (l = list.length; i < l;) {
             s = list[i++];
             s = prefix ? datatize(s) : s.replace(cleanAttr, emp);
             s && (arr[j++] = s);
         }
-        if (false === join) {
-            return arr;
-        }
-        // Escape periods to allow valid attrs like <p data-the.wh_o="totally valid">
+        // Escape periods to allow atts like `[data-the.wh_o]`
         // @link api.jquery.com/category/selectors/
         // @link stackoverflow.com/q/13283699/770127
-        return j ? '[' + arr.join('],[').replace(escDots, '\\\\.') + ']' : emp;
+        return false === join ? arr : j ? '[' + arr.join('],[').replace(escDots, '\\\\.') + ']' : emp;
     }
 
     /**
@@ -329,10 +297,9 @@
      */     
     xports['queryData'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
-        if (false === root) { return toAttrSelector(list, true, root); }
-        return queryEngine(toAttrSelector(list, true), root); 
-
-    } : function(list, root) {// == FALLBACK ==
+        return false === root ? toAttrSelector(list, true, root) : queryEngine(toAttrSelector(list, true), root);
+    } : function(list, root) {
+        // == FALLBACK ==
         list = toAttrSelector(list, true, false);
         return false === root ? list : queryAttrFallback(list, root); 
     };
@@ -344,10 +311,9 @@
      */     
     xports['queryAttr'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
-        if (false === root) { return toAttrSelector(list, root, root); }
-        return queryEngine(toAttrSelector(list), root); 
-
-    } : function(list, root) {// == FALLBACK ==
+        return false === root ? toAttrSelector(list, root, root) : queryEngine(toAttrSelector(list), root);
+    } : function(list, root) {
+        // == FALLBACK ==
         list = toAttrSelector(list, false, false);
         return false === root ? list : queryAttrFallback(list, root); 
     };
@@ -356,9 +322,9 @@
      * @param {Array|string}  list   is an array of attribute names (w/o bracks)
      * @param {Object=}       root
      */
-    function queryAttrFallback(list, root) {// Get elems by attr name:
+    function queryAttrFallback(list, root) {
         var j, i, e, els, l = list.length, ret = [], u = 0;
-        if (!l) { return ret; }
+        if (!l) return ret;
         els = queryEngine('*', root);
         for (j = 0; (e = els[j]); j++) {
             i = l; // reset i for each outer iteration
@@ -406,14 +372,12 @@
      */
     effins['dataset'] = function(k, v) {
         var kMulti = typeof k == 'object' ? !(void 0 === v && datatize(k[0])) : typeof k == 'function';
-        if (void 0 === v && !kMulti) {
+        if (void 0 === v && !kMulti)
             return dataset(this[0], k); // GET
-        } 
-        k = kMulti ? k : datatize(k);
-        return k ? eachNode(this, function(e, x) {
+        return (k = kMulti ? k : datatize(k)) ? eachNode(this, function(e, x) {
             x = typeof v == 'function' ? v.call(e) : v;
             kMulti ? dataset(e, k, x) : e.setAttribute(k, '' + x); 
-        }) : (void 0 === v ? v : this); // undefined|this
+        }) : void 0 === v ? v : this;
     };
 
     /**
@@ -423,13 +387,12 @@
      */    
     effins['attr'] = function(k, v) {
         var kMulti = typeof k == 'object' || typeof k == 'function';
-        if (void 0 === v && !kMulti) {
+        if (void 0 === v && !kMulti)
             return attr(this[0], k); // GET
-        }
         return k ? eachNode(this, function(e, x) {
             x = typeof v == 'function' ? v.call(e) : v;
             kMulti ? attr(e, k, x) : e.setAttribute(k, '' + x); 
-        }) : (void 0 === v ? v : this); // undefined|this
+        }) : (void 0 === v ? v : this);
     };
 
     /**
@@ -438,17 +401,11 @@
      * @param {Array|string}  keys  one or more SSV or CSV data attr keys or names
      */
     effins['deletes'] = function(keys) {
-        if (void 0 === keys) { return eachNode(this, resetDataset); }
-        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
-        keys = typeof keys == 'object' ? map(keys, datatize) : datatize(keys);
-        return eachNode(this, removeAttr, keys);
+        if (void 0 === keys)
+            return eachNode(this, resetDataset);
+        keys = typeof keys == 'string' ? keys.split(ssv) : [].concat(keys);
+        return eachNode(this, removeAttr, map(keys, datatize));
     };
-    /* or:
-    effins['deletes'] = function(keys) {
-        if (void 0 === keys) { return eachNode(this, resetDataset); }
-        keys = typeof keys == 'string' ? keys.split(ssv) : keys;
-        return eachNode(this, deletes, keys);
-    }; */
     
     /**
      * Remove attrbutes for each element in a collection.
@@ -456,10 +413,8 @@
      * @param {Array|string}  keys  one or more SSV or CSV attr names
      */
     effins['removeAttr'] = function(keys) {
-        // split first to prevent splitting for each element
-        return eachNode(this, removeAttr, typeof keys == 'string' ? keys.split(ssv) : keys);
+        return eachNode(this, removeAttr, keys);
     };
 
-    xports['fn'] = effins;
     return xports;
 }));
