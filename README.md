@@ -1,15 +1,12 @@
-[dope](http://github.com/ryanve/dope) - [2.2](https://github.com/ryanve/dope/blob/master/CHANGELOG.md)
-=======
+# [dope](../../)
 
-[dope](http://github.com/ryanve/dope) is cross-browser JavaScript module for working with HTML attributes. It includes an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that adheres to the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes). It works standalone or can integrate into jQuery-compatible hosts. It runs screamin-fast and [gzips < 2k](http://airve.github.com/js/dope/dope.min.js). Got data? =)
+<b>dope</b> is cross-browser JavaScript module for working with HTML attributes. It includes an HTML5 [dataset](http://dev.opera.com/articles/view/an-introduction-to-datasets/) API abstraction that adheres to the [specification](http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes). It works standalone or can integrate into jQuery-compatible hosts. It runs screamin-fast and [gzips < 2k](http://airve.github.com/js/dope/dope.min.js). Got data? =)
 
-**[CDN](http://airve.github.com)**: [dev](http://airve.github.com/js/dope/dope.js) | [min](http://airve.github.com/js/dope/dope.min.js)
-
-```
+```sh
 $ npm install dope
 ```
 
-## methods
+## API ([2.2](CHANGELOG.md))
 
 In standalone usage, methods are available on the **dope** namespace. The docs below use `$` to denote `dope` or a host library like jQuery or ender.
 
@@ -18,7 +15,7 @@ dope.dataset(document.body, 'foo', 'bar'); // standalone
 $.dataset(document.body, 'foo', 'bar');    // integrated
 ```
 
-### chain
+### Chain methods
 
 #### $.fn.attr()
 
@@ -62,7 +59,7 @@ $(elem).deletes(keys) // remove 1 or more SSV data-* attributes from elem or col
 $(document.body).deletes('movieName')      // remove [data-movie-name] from the <body> element
 ```
 
-### static
+### Static methods
 
 #### $.attr()
 
@@ -173,30 +170,14 @@ define('dope', function() {
 });
 ```
 
-## compatibility
+## Compatibility
 
-Supports all major browsers. Tested in Chrome / FF3+ / IE7+ / Opera / Safari.
+Supports all major browsers. Tested in Chrome, FF3+, IE7+, Opera, and Safari.
 
-## license
+## Related modules
 
-### [dope](http://github.com/ryanve/dope) is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
+- [atts](https://github.com/ryanve/atts): attributes module
+
+## License: [MIT](http://en.wikipedia.org/wiki/MIT_License)
 
 Copyright (C) 2012 by [Ryan Van Etten](https://github.com/ryanve)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
