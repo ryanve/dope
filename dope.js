@@ -1,9 +1,9 @@
 /*!
- * dope         HTML attributes/dataset module
- * @link        http://github.com/ryanve/dope
- * @license     MIT
- * @copyright   2012 Ryan Van Etten
- * @version     2.2.1
+ * dope HTML attributes/dataset module
+ * @link http://github.com/ryanve/dope
+ * @license MIT
+ * @copyright Ryan Van Etten
+ * @version 2.3.0-0
  */
 
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -27,12 +27,12 @@
       , queryEngine = function(s, root) {
             return s ? (root || doc)[queryMethod](s) : []; 
         }
-      , camels = /([a-z])([A-Z])/g            // lowercase next to uppercase
-      , dashB4 = /-(.)/g                      // finds chars after hyphens
-      , csvSsv = /\s*[\s\,]+\s*/              // splitter for comma *or* space-separated values
-      , cleanAttr = /^[\[\s]+|\s+|[\]\s]+$/g  // replace whitespace, trim [] brackets
+      , camels = /([a-z])([A-Z])/g // lowercase next to uppercase
+      , dashB4 = /-(.)/g // finds chars after hyphens
+      , csvSsv = /\s*[\s\,]+\s*/ // splitter for comma *or* space-separated values
+      , cleanAttr = /^[\[\s]+|\s+|[\]\s]+$/g // replace whitespace, trim [] brackets
       , cleanPre = /^[\[\s]?(data-)?|\s+|[\]\s]?$/g // replace whitespace, trim [] brackets, trim prefix
-      , escDots = /\\*\./g                    // find periods w/ and w/o preceding backslashes
+      , escDots = /\\*\./g // find periods w/ and w/o preceding backslashes
       , ssv = /\s+/
       , trimmer = /^\s+|\s+$/
       , trim = ''.trim ? function(s) {
@@ -42,7 +42,7 @@
         };
     
     /**
-     * @return  {string}
+     * @return {string}
      */
     function camelHandler(all, letter) { 
         return letter.toUpperCase();
@@ -51,8 +51,8 @@
     /**
      * Convert  'data-pulp-fiction' to 'pulpFiction'. Non-scalars return an
      * empty string. number|boolean coerces to string. (opposite: datatize())
-     * @param   {string|number|boolean|*}  s
-     * @return  {string}
+     * @param {string|number|boolean|*} s
+     * @return {string}
      */
     function camelize(s) {
         if (typeof s != 'string')
@@ -62,10 +62,10 @@
     }
 
     /**
-     * Convert  'pulpFiction' to 'data-pulp-fiction' OR 47 to 'data-47'
+     * Convert 'pulpFiction' to 'data-pulp-fiction' OR 47 to 'data-47'
      * Invalid types return an empty string. (opposite: camelize())
-     * @param   {string|number|*}  s
-     * @return  {string}
+     * @param {string|number|*} s
+     * @return {string}
      */
     function datatize(s) {
         if (typeof s == 'string') s = s.replace(cleanPre, '$1').replace(camels, '$1-$2'); // aA to a-A
@@ -75,7 +75,7 @@
 
     /**
      * Convert a stringified primitive into its correct type.
-     * @param {string|*}  s
+     * @param {string|*} s
      */
     function parse(s) {
         var n; // undefined, or becomes number
@@ -88,11 +88,11 @@
     }
 
     /**
-     * @param   {Object|Array|*}  list
-     * @param   {Function}        fn     
-     * @param   {(Object|*)=}     scope
-     * @param   {boolean=}        compact 
-     * @return  {Array}
+     * @param {Object|Array|*} list
+     * @param {Function} fn     
+     * @param {(Object|*)=} scope
+     * @param {boolean=} compact 
+     * @return {Array}
      */
     function map(list, fn, scope, compact) {
         var l, i = 0, v, u = 0, ret = [];
@@ -107,9 +107,9 @@
     
     /** 
      * special-case DOM-node iterator optimized for internal use
-     * @param {Object|Array}  ob
-     * @param {Function}      fn
-     * @param {*=}            param
+     * @param {Object|Array} ob
+     * @param {Function} fn
+     * @param {*=} param
      */
     function eachNode(ob, fn, param) {
         for (var l = ob.length, i = 0; i < l; i++)
@@ -119,9 +119,9 @@
 
     /**
      * internal-use function to iterate a node's attributes
-     * @param {Object}        el
-     * @param {Function}      fn
-     * @param {(boolean|*)=}  exp
+     * @param {Object} el
+     * @param {Function} fn
+     * @param {(boolean|*)=} exp
      */
     function eachAttr(el, fn, exp) {
         var test, n, a, i, l;
@@ -137,7 +137,7 @@
 
     /**
      * Get object containing an element's data attrs.
-     * @param  {Node}  el
+     * @param {Element} el
      * @return {DOMStringMap|Object|undefined}
      */
     function getDataset(el) {
@@ -152,8 +152,8 @@
     }
 
     /**
-     * @param  {Node}     el
-     * @param  {Object=}  ob
+     * @param {Element} el
+     * @param {Object=} ob
      */
     function resetDataset(el, ob) {
         if (!el) return;
@@ -166,19 +166,18 @@
     }
     
     /**
-     * @param  {Node}      el
-     * @param  {Object}    ob
-     * @param  {Function}  fn
+     * @param {Element} el
+     * @param {Object} ob
+     * @param {Function} fn
      */
     function setViaObject(el, ob, fn) {
-        for (var n in ob)
-            owns.call(ob, n) && fn(el, n, ob[n]);
+        for (var n in ob) owns.call(ob, n) && fn(el, n, ob[n]);
     }
     
     /**
-     * @param  {Object|Array|Function}  el
-     * @param  {(string|Object|*)=}     k
-     * @param  {*=}                     v
+     * @param {Object|Array|Function} el
+     * @param {(string|Object|*)=} k
+     * @param {*=} v
      */    
     function attr(el, k, v) {
         el = el.nodeType ? el : el[0];
@@ -203,9 +202,9 @@
     }
     
     /**
-     * @param  {Object|Array|Function}  el
-     * @param  {(string|Object|*)=}     k
-     * @param  {*=}                     v
+     * @param {Object|Array|Function} el
+     * @param {(string|Object|*)=} k
+     * @param {*=} v
      */    
     function dataset(el, k, v) {
         var exact, kFun = typeof k == 'function';
@@ -235,8 +234,8 @@
     }
 
     /**
-     * @param  {Node}                   el
-     * @param  {(Array|string|number)=} keys
+     * @param {Element} el
+     * @param {(Array|string|number)=} keys
      */
     function deletes(el, keys) {
         var k, i = 0;
@@ -255,8 +254,8 @@
     }
     
     /**
-     * @param  {Node}                el
-     * @param  {Array|string|number} keys
+     * @param {Element} el
+     * @param {Array|string|number} keys
      */
     function removeAttr(el, keys) {
         var i = 0;
@@ -270,10 +269,10 @@
 
     /**
      * Convert list of attr names or data- keys into a selector.
-     * @param   {Array|string|number|*}  list
-     * @param   {boolean=}               prefix
-     * @param   {boolean=}               join
-     * @return  {string|Array}
+     * @param {Array|string|number|*} list
+     * @param {boolean=} prefix
+     * @param {boolean=} join
+     * @return {string|Array}
      */
     function toAttrSelector(list, prefix, join) {
         var l, s, i = 0, j = 0, emp = '', arr = [];
@@ -292,8 +291,8 @@
 
     /**
      * Get elements matched by a data key.
-     * @param   {Array|string}  list   array or CSV or SSV data keys
-     * @return  {Array|*}
+     * @param {Array|string} list array or CSV or SSV data keys
+     * @return {Array|*}
      */     
     xports['queryData'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
@@ -306,8 +305,8 @@
     
     /**
      * Get elements matched by an attribute name.
-     * @param   {Array|string}  list   array or CSV or SSV data keys
-     * @return  {Array|*}
+     * @param {Array|string} list array or CSV or SSV data keys
+     * @return {Array|*}
      */     
     xports['queryAttr'] = QSA ? function(list, root) {
         // Modern browsers, IE8+
@@ -319,8 +318,8 @@
     };
     
     /**
-     * @param {Array|string}  list   is an array of attribute names (w/o bracks)
-     * @param {Object=}       root
+     * @param {Array|string} list array of attribute names (w/o bracks)
+     * @param {Object=} root
      */
     function queryAttrFallback(list, root) {
         var j, i, e, els, l = list.length, ret = [], u = 0;
@@ -343,8 +342,8 @@
     xports['parse'] = parse;
 
     /**
-     * @param  {string|*}  s
-     * @since  2.1.0
+     * @param {string|*} s
+     * @since 2.1.0
      */
     xports['parseJSON'] = function(s) {
         s = parse(s);
@@ -366,9 +365,9 @@
     xports['datatize'] = datatize;
 
     /**
-     * @this    {Object|Array}
-     * @param   {*=}   k
-     * @param   {*=}   v
+     * @this {Object|Array}
+     * @param {*=} k
+     * @param {*=} v
      */
     effins['dataset'] = function(k, v) {
         var kMulti = typeof k == 'object' ? !(void 0 === v && datatize(k[0])) : typeof k == 'function';
@@ -381,9 +380,9 @@
     };
 
     /**
-     * @this    {Object|Array}
-     * @param   {*=}   k
-     * @param   {*=}   v
+     * @this {Object|Array}
+     * @param {*=} k
+     * @param {*=} v
      */    
     effins['attr'] = function(k, v) {
         var kMulti = typeof k == 'object' || typeof k == 'function';
@@ -397,7 +396,7 @@
 
     /**
      * Remove data- attrs for each element in a collection.
-     * @this  {Object|Array}
+     * @this {Object|Array}
      * @param {Array|string}  keys  one or more SSV or CSV data attr keys or names
      */
     effins['deletes'] = function(keys) {
@@ -409,7 +408,7 @@
     
     /**
      * Remove attrbutes for each element in a collection.
-     * @this  {Object|Array}
+     * @this {Object|Array}
      * @param {Array|string}  keys  one or more SSV or CSV attr names
      */
     effins['removeAttr'] = function(keys) {
