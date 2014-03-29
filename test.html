@@ -1,65 +1,47 @@
 <!DOCTYPE html>
-<html class="rad ++" lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
-
+<html lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
 <meta charset=utf-8>
 <link rel=dns-prefetch href=//airve.github.com>
-<title>dope Test Suite</title>
-
+<title>Tests</title>
 <meta name=viewport content="width=device-width,initial-scale=1.0">
-<meta name=description content="JavaScript module test suite"> 
-<meta name=author content="Ryan Van Etten">
-
-<link rel=stylesheet href="http://css3base.com/build/normalize,h5bp,responsive,rad,plus,print.20120916.css">
-
 <style>
-  body{margin:1em auto;max-width:100%;width:94%;padding:0 3%}
-  a{text-decoration:none;cursor:pointer}
-  pre,td,th{padding:1em;text-align:left;/*border-left:1px solid #eed*/}
-  td{font-weight:bold;/*color:#2aa198*/}
-  td:first-child{font-weight:normal;/*color:#586e75*/}
-  td:last-child{/*color:#dc322f*/}
-  pre{padding:1em;/*background:#eee8d5*/}
-  th{font-size:140%}
-  #footer{margin:2em 0;border-bottom:1em solid #ffe}
-  nav ul li{display:block;float:left;margin:0 0 1em}
-  nav ul li a{padding:.5em;background:#653;color:#fff!important;margin:0 1px 1em 0}
-  nav ul li a:hover{color:#653!important;background:#8d2}
-  [accesskey=z]{visibility:hidden;width:0;height:0}
-  .rad p{padding:1em}
+  html { 
+    font:normal 1em sans-serif;
+    background-color:#efefef; color:#111;
+  }
+  body { margin:1em auto; max-width:100%; width:96%; }
+  code, kbd, pre, samp { font-family:monospace; font-size:1.125em }
+  a { text-decoration:none; cursor:pointer }
+  pre, td, th { padding:1em; text-align:left }
+  td { font-weight:bold }
+  td:first-child { font-weight:normal }
+  pre { padding:1em }
+  th { font-size:140% }
+  @media (max-width:51em) {
+    table, thead, tbody, tfoot, th, td, tr { display:block; }
+    tr + tr { margin:1em 0 0 }
+    td { padding:0 }
+    td:not(:first-child) { margin-left:1em }
+    td:nth-child(2):before { content:"expect: " }
+    td:nth-child(3):before { content:"actual: " }
+  }
 </style>
 
-<!-- Make sure to include the URI scheme (see uri5.com) in external
-   URIs so that offline testing works in all browsers. -->
-
-<!--code.google.com/p/html5shiv/-->
-<!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
-<!-- Host URIs ( test integration with all of these )
+<!-- Host URIs to test integration with
   http://airve.github.com/js/elo/elo.js
   http://airve.github.com/js/jeesh/jeesh.js
   http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js
 -->
 
-<!-- 
-  These can be loaded in any order. They're in the <head> here, but at deployment
-  they should be @ bottom or loaded with an async loader (e.g. yepnopejs.com)
-  The test suite code is inline @ bottom.
--->
+<!-- These can be loaded in any order. -->
 <script src="http://airve.github.com/js/elo/elo.min.js"></script>
 <script src="http://airve.github.com/js/dj/dj.min.js"></script>
-<script src="http://airve.github.com/js/vibe/vibe.min.js"></script>
 <script src="dope.js"></script><!-- github.com/ryanve/dope  -->
   
-<header id="header">
-  <h1><a href="http://github.com/ryanve/dope">dope</a> Test Suite</h1>
-</header>
+<h1><a href="http://github.com/ryanve/dope">dope</a> Test Suite</h1>
 
-<pre id=ua></pre>
-
-<pre><code><strong>var</strong> docElem = document.documentElement;
-<strong>var</strong> $html = $(docElem);
+<pre><code><strong>var</strong> docElem = document.documentElement
+<strong>var</strong> $html = $(docElem)
 </code></pre>
 
 <!-- In the DOM all 3 test divs should have `data-vincent-vega` and `data-mia-wallace`: -->
@@ -68,13 +50,9 @@
 <div class="test"></div>
 <div class="test"></div>
 
-<!--<figure>
-  <img src="http://cdn.airve.com/image/pulp-fiction/jules_056_71_1920_vio.png" alt="Samuel Jackson as Jules Winnfield in Pulp Fiction">
-</figure>-->
-
 <table id=tests>
   <tr>
-    <th scope="col"><a href=#tests accesskey=s>test<br>code</a></th>
+    <th scope="col"><a href=#tests>test<br>code</a></th>
     <th scope="col"><a href=#tests>correct<br>output</a></th>
     <th scope="col"><a href=#tests>actual<br>output</a></th>
   </tr>
@@ -85,41 +63,41 @@
   </tr>
   <tr>
     <td><code><strong>typeof</strong> $html.dataset()</code></td>
-    <td><code>[object DOMStringMap]<br><strong>or</strong> [object Object]</code></td>
+    <td><code>[object DOMStringMap]</code></td>
     <td><code id=dataset-to-string></code></td>
   </tr>
   <tr>
-    <td><code>dope.camelize(<span class=string>'data-jack-rabbit-slims'</span>)</code></td>
+    <td><code>dope<wbr>.camelize(<span class=string>'data-jack-rabbit-slims'</span>)</code></td>
     <td><code>jackRabbitSlims</code></td>
     <td><code id=camelize></code></td>
   </tr>
   <tr>
-    <td><code>dope.camelize(<span class=string>'[data-jack-rabbit-slims]'</span>)</code></td>
+    <td><code>dope<wbr>.camelize(<span class=string>'[data-jack-rabbit-slims]'</span>)</code></td>
     <td><code>jackRabbitSlims</code></td>
     <td><code id=camelize-bracks></code></td>
   </tr>
   <tr>
-    <td><code>_.isEqual($html.dataset(), dope.dataset(docElem))</code></td>
+    <td><code>_.isEqual($html<wbr>.dataset(), dope<wbr>.dataset(docElem))</code></td>
     <td><code>true</code></td>
     <td><code id=dataset-object></code></td>
   </tr>
   <tr>
-    <td><code>_.keys( $html.dataset() )</code></td>
-    <td><code>movieName,genre,producer</code></td>
+    <td><code>_.keys($html<wbr>.dataset())</code></td>
+    <td><code>movieName<wbr>,genre<wbr>,producer</code></td>
     <td><code id=keys></code></td>
   </tr>
   <tr>
-    <td><code>$html.dataset(<span class=string>'movieName'</span>)</code></td>
+    <td><code>$html<wbr>.dataset(<span class=string>'movieName'</span>)</code></td>
     <td><code>Pulp Fiction</code></td>
     <td><code id=get-movie-name></code></td>
   </tr>
   <tr>
-    <td><code>$html<br>.dataset(<span class=string>'director'</span>, <span class=string>'Tarantino'</span>)<br>.dataset(<span class=string>'director'</span>)</code></td>
+    <td><code>$html<wbr>.dataset(<span class=string>'director'</span>, <span class=string>'Tarantino'</span>)<wbr>.dataset(<span class=string>'director'</span>)</code></td>
     <td><code>Tarantino</code></td>
     <td><code id=set-director></code></td>
   </tr>
   <tr>
-    <td><code>dope.dataset(docElem, 'year', 1994)</code></td>
+    <td><code>dope<wbr>.dataset(docElem, 'year', 1994)</code></td>
     <td><code>1994</code></td>
     <td><code id=set-year></code></td>
   </tr>
@@ -139,70 +117,46 @@
     <td><code id=parse-true></code></td>
   </tr>
   <tr>
-    <td><code><span class=string>'number'</span> <span class=operator>===</span> typeof dope.parse(<span class=string>'NaN'</span>)</code></td>
+    <td><code><span class=string>'number'</span> <span class=operator>===</span> typeof dope<wbr>.parse(<span class=string>'NaN'</span>)</code></td>
     <td><code>true</code></td>
     <td><code id=parse-num></code></td>
   </tr>
   <tr>
-    <td><code><span class=number>Infinity</span> <span class=operator>===</span> dope.parse('Infinity')</code></td>
+    <td><code><span class=number>Infinity</span> <span class=operator>===</span> dope<wbr>.parse('Infinity')</code></td>
     <td><code>true</code></td>
     <td><code id=parse-inf></code></td>
   </tr>
   <tr>
-    <td><code>dope.deletes(docElem, 'genre producer')</code></td>
+    <td><code>dope<wbr>.deletes(docElem, 'genre producer')</code></td>
     <td><code>undefined</code></td>
     <td><code id=deletes></code></td>
   </tr>
   <tr>
-    <td><code>$('div').dataset(<b>{</b>
+    <td><code>$('div')<wbr>.dataset(<b>{</b>
       <br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
-     <br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
-     <br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
-     <br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
+      <br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
+      <br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
+      <br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
     <br><b>}</b>).deletes(<span class=string>'butchCoolidge julesWinnfield'</span>)<br>&nbsp;&nbsp;.dataset(<span class=string>'miaWallace'</span>)</code></td>
     <td><code>Uma Thurman</code></td>
     <td><code id=set-multi></code></td>
   </tr>
-  <!--<tr>
-    <td><code>dope.toDataSelector(<b>[</b>'a', ' b', null, 'cD'<b>]</b>)</code></td>
-    <td><code>[data-a],[data-b],[data-c-d]</code></td>
-    <td><code id=to-data-selector-arr></code></td>
-  </tr>
   <tr>
-    <td><code>dope.toDataSelector('a  b,, cD'); <small>// <abbr title="comma-separated values">csv</abbr> or <abbr title="space-separated values">ssv</abbr></small></code></td>
-    <td><code>[data-a],[data-b],[data-c-d]</code></td>
-    <td><code id=to-data-selector-str></code></td>
-  </tr>-->
-  <tr>
-    <td><code>dope.queryData('miaWallace').length</code></td>
+    <td><code>dope<wbr>.queryData('miaWallace')<wbr>.length</code></td>
     <td><code>3</code></td>
     <td><code id=query-data></code></td>
   </tr>
   <tr>
-    <td><code>dope.queryData('miaWallace movieName').length</code></td>
+    <td><code>dope<wbr>.queryData('miaWallace movieName')<wbr>.length</code></td>
     <td><code>4</code></td>
     <td><code id=query-data-multi></code></td>
   </tr>
   <tr>
-    <td><code><strong>typeof</strong> $html.dataset('dne')</code></td>
+    <td><code><strong>typeof</strong> $html<wbr>.dataset('dne')</code></td>
     <td><code>undefined</code></td>
     <td><code id=dne></code></td>
   </tr>
 </table>
-
-<footer id="footer">
-  <nav>
-    <ul>
-      <li><a href="#header" title="up" accesskey=a><span class=shape>&#9650;</span></a>
-      <li><a href="https://github.com/ryanve/dope" title="view repo" accesskey=1>Github</a>
-      <li><a href="https://github.com/ryanve/dope/issues" title="report an issue" accesskey=9>Issue?</a>
-      <li><a href="#footer" title="down" accesskey=z>&#9660;</a>
-    </ul>
-  </nav>
-  
-</footer>
-
-<a id="toggle" title="Toggle styles" accesskey="2">&#0926;</a>
 
 <script>
 (function(root, document, console) {
@@ -212,7 +166,6 @@
     , elo = root.elo
     , jQuery = root.jQuery
     , ender = root.ender
-    , vibe = root.vibe
     , docElem = document.documentElement
     , $ = jQuery || elo || ender
     , toString = {}.toString
@@ -250,26 +203,19 @@
   dope.bridge ? dope.bridge($, true) : dj.bridge.call(dope, $, true);
   
   elo.domReady(function(elo) {
-
     var $html = $(docElem)
       , props = {}
       , tests = {}
       , hostProps = {};
-      
-    elo('#toggle').on('click', function() {
-      vibe.toggleClass(docElem, 'dark');
-    });
-
-    html(id('ua'), navigator.userAgent);
 
     // keep the tests in order b/c some of them rely on previous ones
     tests['select-tags'] = $('div').length;
     tests['empty-length'] = $('').length;
     tests['dataset-to-string'] = $html.dataset().toString();
-    tests['camelize'] = dope.camelize( 'data-jack-rabbit-slims' );
-    tests['camelize-bracks'] = dope.camelize( '[data-jack-rabbit-slims]' );
+    tests['camelize'] = dope.camelize('data-jack-rabbit-slims');
+    tests['camelize-bracks'] = dope.camelize('[data-jack-rabbit-slims]');
     tests['dataset-object'] = isEqual($html.dataset(), dope.dataset(docElem));
-    tests['keys'] = keys( $html.dataset() );
+    tests['keys'] = keys($html.dataset());
     tests['get-movie-name'] = $html.dataset('movieName');
     tests['set-director'] = $html.dataset('director', 'Tarantino').dataset('director');
     //tests['set-director'] = dope.dataset(docElem, 'director', 'Tarantino');
