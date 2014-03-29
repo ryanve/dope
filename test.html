@@ -261,14 +261,9 @@
       }
       return true;
     }
-  
+
   // integrate dope into $
   dope.bridge ? dope.bridge($, true) : dj.bridge.call(dope, $, true);
-
-  
-  log( window );
-  log( dj.resample(dope) ); // top-level props
-  log( dj.resample($) ); // integrated
   
   elo.domReady(function (elo) {
     
@@ -329,7 +324,6 @@
     elo.each(tests, function (v, k, tests) {
       html( id(k), String(v) );
     });
-  
   });
 }(this, this.document, this.console, this._, this.dj, this.dope, this.elo, this.jQuery, this.ender, this.vibe ));
 </script>
