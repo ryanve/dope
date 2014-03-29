@@ -10,7 +10,8 @@
   laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
 
 (function(root, name, make) {
-  typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
+  if (typeof module != 'undefined' && module.exports) module.exports = make();
+  else root[name] = make();
 }(this, 'dope', function() {
 
   // developers.google.com/closure/compiler/docs/api-tutorial3
