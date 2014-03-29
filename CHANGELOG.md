@@ -1,5 +1,4 @@
 # Changes
-
 ## [2.2.0](../../commit/7d9e787029a68e50893009424b7c4ae31717491c) (2013-04-06)
 - Remove [undocumented 2nd param](../../commit/7d9e787029a68e50893009424b7c4ae31717491c) from `dope.parse()`.
 
@@ -19,6 +18,9 @@
 - Added general purpose `dope.trim()` and `dope.map()` (to replace mapFilter)
 - Removed `dope.toDataSelector()`/`dope.noConflict()`/`dope.toArray()`/`dope.mapFilter`
 
+## Warning
+1.x versions do not all adhere to [semver](http://semver.org/). They should have been 0.x versions. Consider them as so.
+
 ## [1.5.0](../../commit/629a0931e97ac7c5b2b7f84b9186aa1ca2b5096d) (2012-09-09)
 - Rename repo/export from "domdata"/"domData" to "dope"
 
@@ -26,21 +28,8 @@
 - Made it so that `dope.render()` can properly render `NaN` and `Infinity`.
 
 ## [1.4.0](../../commit/49b381e43273e93de117c107a58c2ba49c1b16f1) (2012-06-24)
-Replaced rare usage `dope.camelizeAll()`/`dope.datatizeAll()` methods with broader usage utilities to do the same thing: `dope.toArray()` and `dope.mapFilter()`. Instead of:
-
-```js
-dope.camelizeAll(list);
-dope.datatizeAll(list);
-```
-
-use: 
-
-```js
-dope.mapFilter(dope.toArray(list), dope.camelize); 
-dope.mapFilter(dope.toArray(list), dope.datatize);
-```
-
-Use `dope.toDataSelector(list)` for building selector strings.
+- Replaced rare usage `dope.camelizeAll()` and `dope.datatizeAll()` methods with broader usage utils `dope.toArray()` and `dope.mapFilter()` that in combination can help do the same thing.
+- Use `dope.toDataSelector(list)` for building selector strings.
 
 ## [1.3.0](../../commit/aae50d8c0d9e78b19d3dcaf588f8f33658171c9d) (2012-06-23)
 - Improved regexps, added number support to camelize/datatize to allow for numeric keys b/c `data-0="totally valid"`
