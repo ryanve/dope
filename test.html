@@ -204,75 +204,59 @@
 
 <a id="toggle" title="Toggle styles" accesskey="2">&#0926;</a>
 
-<!-- accesskeys: 
-  1: homepage
-  a: jump to top 
-  z: jump to bottom 
-  s: skip to main content
--->
-
 <script>
-(function ( window, document, console, _, dj, dope, elo, jQuery, ender, vibe ) {
-
-  var docElem = document.documentElement
+(function(root, document, console) {
+  var _ = root._
+    , dj = root.dj
+    , dope = root.dope
+    , elo = root.elo
+    , jQuery = root.jQuery
+    , ender = root.ender
+    , vibe = root.vibe
+    , docElem = document.documentElement
     , $ = jQuery || elo || ender
     , toString = {}.toString
     , hasConsole = !!(console && console.log)
     , log = hasConsole ? function (s) {
-      console.log(s); 
-    } : function (s, force) { 
-      force && alert(s); 
-    }
-    , id = function (id) {
-      return document.getElementById(id);
-    }
-    , html = function (el, html) {
-      el && 1 === el.nodeType && (el.innerHTML = html || '');
-    };
-
-    function keys (o, type) {
-      var a = [], n;
-      type = typeof type == 'string' && type;
-      for ( n in o ) {
-        if ( !o.hasOwnProperty(n) ) { break; }
-        if ( !type || typeof o[a] === type ) { a.push(n); }
+        console.log(s); 
+      } : function(s, force) { 
+        force && alert(s); 
       }
+    , id = function(id) {
+        return document.getElementById(id);
+      }
+    , html = function(el, html) {
+        el && 1 === el.nodeType && (el.innerHTML = html || '');
+      };
+
+    function keys(o, type) {
+      var n, a = [];
+      type = typeof type == 'string' && type;
+      for (n in o) o.hasOwnProperty(n) && (!type || typeof o[a] === type) && a.push(n);
       return a;
     }
     
-    function isEqual (a, b) {
+    function isEqual(a, b) {
       var t = typeof a;
-      if ( t != typeof b || ( a ? !b : b ) ) { 
-        return false; 
-      }
-      if ( a === b ? a === a : a !== a && b !== b ) { 
-        return true; 
-      }
-      if ( !a || !b || toString.call(a) != toString.call(b) ) { 
-        return false; 
-      }
-      if ( t != 'object' && t != 'function' ) { 
-        return false; 
-      }
-      for ( t in a ) {
-        if ( !isEqual( a[t], b[t] ) ) { 
-          return false;
-        }
-      }
+      if (t != typeof b || (a ? !b : b)) return false;
+      if (a === b ? a === a : a !== a && b !== b) return true;
+      if (!a || !b || toString.call(a) != toString.call(b)) return false;
+      if (t != 'object' && t != 'function') return false; 
+      for (t in a) if (!isEqual(a[t], b[t])) return false;
       return true;
     }
 
   // integrate dope into $
   dope.bridge ? dope.bridge($, true) : dj.bridge.call(dope, $, true);
   
-  elo.domReady(function (elo) {
-    
+  elo.domReady(function(elo) {
+
     var $html = $(docElem)
       , props = {}
       , tests = {}
       , hostProps = {};
       
-    elo('#toggle').on('click', function () {
+    elo('#toggle').on('click', function() {
       vibe.toggleClass(docElem, 'dark');
     });
 
@@ -308,7 +292,7 @@
 
     // set 4 via object, then delete 2 of them, then access 1 of the non-deleted ones:
     tests['set-multi'] = $('div').dataset({
-       vincentVega: 'John Travolta'
+         vincentVega: 'John Travolta'
        , miaWallace: 'Uma Thurman'
        , butchCoolidge: 'Bruce Willis'
        , julesWinnfield: 'Samuel Jackson'
@@ -321,9 +305,9 @@
     tests['query-data-multi'] = dope.queryData('miaWallace movieName').length;
 
     // print the test outputs
-    elo.each(tests, function (v, k, tests) {
-      html( id(k), String(v) );
+    elo.each(tests, function(v, k, tests) {
+      html(id(k), String(v));
     });
   });
-}(this, this.document, this.console, this._, this.dj, this.dope, this.elo, this.jQuery, this.ender, this.vibe ));
+}(this, document, this.console));
 </script>
