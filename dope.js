@@ -1,13 +1,11 @@
 /*!
- * dope HTML attributes/dataset module
- * @link http://github.com/ryanve/dope
- * @license MIT
- * @copyright Ryan Van Etten
- * @version 2.3.0-0
+ * dope 2.2.2
+ * http://github.com/ryanve/dope
+ * MIT License (c) Ryan Van Etten 
  */
 
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
-  laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
+  laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:10 */
 
 (function(root, name, make) {
   if (typeof module != 'undefined' && module.exports) module.exports = make();
