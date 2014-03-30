@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-movie-name="Pulp Fiction" data-genre="crime" data-producer="Bender">
 <meta charset=utf-8>
-<link rel=dns-prefetch href=//airve.github.com>
 <title>Tests</title>
 <meta name=viewport content="width=device-width,initial-scale=1.0">
 <style>
@@ -17,7 +16,7 @@
   td:first-child { font-weight:normal }
   pre { padding:1em }
   th { font-size:140% }
-  @media (max-width:51em) {
+  @media (max-width:44em) {
     table, thead, tbody, tfoot, th, td, tr { display:block; }
     tr + tr { margin:1em 0 0 }
     td { padding:0 }
@@ -27,160 +26,127 @@
   }
 </style>
 
-<!-- Host URIs to test integration with
-  http://airve.github.com/js/elo/elo.js
-  http://airve.github.com/js/jeesh/jeesh.js
-  http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js
--->
-
-<!-- These can be loaded in any order. -->
-<script src="http://airve.github.com/js/elo/elo.min.js"></script>
-<script src="http://airve.github.com/js/dj/dj.min.js"></script>
-<script src="dope.js"></script><!-- github.com/ryanve/dope  -->
-  
-<h1><a href="http://github.com/ryanve/dope">dope</a> Test Suite</h1>
-
-<pre><code><strong>var</strong> docElem = document.documentElement
-<strong>var</strong> $html = $(docElem)
-</code></pre>
-
-<!-- In the DOM all 3 test divs should have `data-vincent-vega` and `data-mia-wallace`: -->
-<!-- They should NOT have `data-butch-coolidge` or `data-jules-winnfield`: -->
+<h1>Tests</h1>
 <div class="test"></div>
 <div class="test"></div>
 <div class="test"></div>
 
 <table id=tests>
   <tr>
-    <th scope="col"><a href=#tests>test<br>code</a></th>
-    <th scope="col"><a href=#tests>correct<br>output</a></th>
-    <th scope="col"><a href=#tests>actual<br>output</a></th>
+    <th scope="col"><a href=#tests>test</a></th>
+    <th scope="col"><a href=#tests>expect</a></th>
+    <th scope="col"><a href=#tests>actual</a></th>
   </tr>
   <tr>
-    <td><code>$(<span class=string>'div'</span>).length</code></td>
+    <td>select-tags</td>
     <td><code>3</code></td>
     <td><code id=select-tags></code></td>
   </tr>
   <tr>
-    <td><code><strong>typeof</strong> $html.dataset()</code></td>
-    <td><code>[object DOMStringMap]</code></td>
-    <td><code id=dataset-to-string></code></td>
+    <td>dataset-class</td>
+    <td><code>DOMStringMap</code></td>
+    <td><code id=dataset-class></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.camelize(<span class=string>'data-jack-rabbit-slims'</span>)</code></td>
+    <td>camelize</td>
     <td><code>jackRabbitSlims</code></td>
     <td><code id=camelize></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.camelize(<span class=string>'[data-jack-rabbit-slims]'</span>)</code></td>
+    <td>camelize-bracks</td>
     <td><code>jackRabbitSlims</code></td>
     <td><code id=camelize-bracks></code></td>
   </tr>
   <tr>
-    <td><code>_.isEqual($html<wbr>.dataset(), dope<wbr>.dataset(docElem))</code></td>
+    <td>dataset-object</td>
     <td><code>true</code></td>
     <td><code id=dataset-object></code></td>
   </tr>
   <tr>
-    <td><code>_.keys($html<wbr>.dataset())</code></td>
+    <td>keys</td>
     <td><code>movieName<wbr>,genre<wbr>,producer</code></td>
     <td><code id=keys></code></td>
   </tr>
   <tr>
-    <td><code>$html<wbr>.dataset(<span class=string>'movieName'</span>)</code></td>
+    <td>get-movie-name</td>
     <td><code>Pulp Fiction</code></td>
     <td><code id=get-movie-name></code></td>
   </tr>
   <tr>
-    <td><code>$html<wbr>.dataset(<span class=string>'director'</span>, <span class=string>'Tarantino'</span>)<wbr>.dataset(<span class=string>'director'</span>)</code></td>
+    <td>set-director</td>
     <td><code>Tarantino</code></td>
     <td><code id=set-director></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.dataset(docElem, 'year', 1994)</code></td>
+    <td>set-year</td>
     <td><code>1994</code></td>
     <td><code id=set-year></code></td>
   </tr>
   <tr>
-    <td><code><span class=string>'1994'</span> <span class=operator>===</span> $html.dataset(<span class=string>'year'</span>)</code></td>
+    <td>get-year</td>
     <td><code>true</code></td>
     <td><code id=get-year></code></td>
   </tr>
   <tr>
-    <td><code><span class=number>1994</span> <span class=operator>===</span> $html.dataset([<span class=string>'year'</span>])</code></td>
+    <td>get-year-exact</td>
     <td><code>true</code></td>
     <td><code id=get-year-exact></code></td>
   </tr>
   <tr>
-    <td><code><em class=boolean>true</em> <span class=operator>===</span> dope.parse(<span class=string>'true'</span>)</code></td>
+    <td>parse-true</td>
     <td><code>true</code></td>
     <td><code id=parse-true></code></td>
   </tr>
   <tr>
-    <td><code><span class=string>'number'</span> <span class=operator>===</span> typeof dope<wbr>.parse(<span class=string>'NaN'</span>)</code></td>
+    <td>parse-num</td>
     <td><code>true</code></td>
     <td><code id=parse-num></code></td>
   </tr>
   <tr>
-    <td><code><span class=number>Infinity</span> <span class=operator>===</span> dope<wbr>.parse('Infinity')</code></td>
+    <td>parse-inf</td>
     <td><code>true</code></td>
     <td><code id=parse-inf></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.deletes(docElem, 'genre producer')</code></td>
+    <td>deletes</td>
     <td><code>undefined</code></td>
     <td><code id=deletes></code></td>
   </tr>
   <tr>
-    <td><code>$('div')<wbr>.dataset(<b>{</b>
-      <br>&nbsp;&nbsp;&nbsp;&nbsp;vincentVega: <span class=string>'John Travolta'</span>
-      <br>&nbsp;&nbsp;, miaWallace: <span class=string>'Uma Thurman'</span>
-      <br>&nbsp;&nbsp;, butchCoolidge: <span class=string>'Bruce Willis'</span>
-      <br>&nbsp;&nbsp;, julesWinnfield: <span class=string>'Samuel Jackson'</span>
-    <br><b>}</b>).deletes(<span class=string>'butchCoolidge julesWinnfield'</span>)<br>&nbsp;&nbsp;.dataset(<span class=string>'miaWallace'</span>)</code></td>
+    <td>set-multi</td>
     <td><code>Uma Thurman</code></td>
     <td><code id=set-multi></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.queryData('miaWallace')<wbr>.length</code></td>
+    <td>query-data</td>
     <td><code>3</code></td>
     <td><code id=query-data></code></td>
   </tr>
   <tr>
-    <td><code>dope<wbr>.queryData('miaWallace movieName')<wbr>.length</code></td>
+    <td>query-data-multi</td>
     <td><code>4</code></td>
     <td><code id=query-data-multi></code></td>
   </tr>
   <tr>
-    <td><code><strong>typeof</strong> $html<wbr>.dataset('dne')</code></td>
+    <td>dne</td>
     <td><code>undefined</code></td>
     <td><code id=dne></code></td>
   </tr>
 </table>
 
+<script src="dope.js"></script>
 <script>
-(function(root, document, console) {
-  var _ = root._
-    , dj = root.dj
-    , dope = root.dope
-    , elo = root.elo
-    , jQuery = root.jQuery
-    , ender = root.ender
-    , docElem = document.documentElement
-    , $ = jQuery || elo || ender
-    , toString = {}.toString
-    , hasConsole = !!(console && console.log)
-    , log = hasConsole ? function (s) {
-        console.log(s); 
-      } : function(s, force) { 
-        force && alert(s); 
-      }
-    , id = function(id) {
-        return document.getElementById(id);
-      }
-    , html = function(el, html) {
-        el && 1 === el.nodeType && (el.innerHTML = html || '');
-      };
+!function(root, document) {
+  var dope = root.dope
+    , effin = dope.fn
+    , toString = {}.toString;
+    
+    function html(el, markup) {
+      if (!el) return;
+      if (1 !== el.nodeType) throw new TypeError;
+      if (1 === arguments.length) return el.innerHTML;
+      el.innerHTML = '' + markup;
+    }
 
     function keys(o, type) {
       var n, a = [];
@@ -188,7 +154,7 @@
       for (n in o) o.hasOwnProperty(n) && (!type || typeof o[a] === type) && a.push(n);
       return a;
     }
-    
+
     function isEqual(a, b) {
       var t = typeof a;
       if (t != typeof b || (a ? !b : b)) return false;
@@ -198,52 +164,40 @@
       for (t in a) if (!isEqual(a[t], b[t])) return false;
       return true;
     }
-
-  // integrate dope into $
-  dope.bridge ? dope.bridge($, true) : dj.bridge.call(dope, $, true);
   
-  elo.domReady(function(elo) {
-    var $html = $(docElem)
-      , props = {}
-      , tests = {}
-      , hostProps = {};
+  function runTests() {
+    var tests = {}, docElem = document.documentElement, subjects = {
+      empty: [],
+      html: [docElem],
+      divs: document.getElementsByTagName('div')
+    };
 
     // keep the tests in order b/c some of them rely on previous ones
-    tests['select-tags'] = $('div').length;
-    tests['empty-length'] = $('').length;
-    tests['dataset-to-string'] = $html.dataset().toString();
+    tests['select-tags'] = subjects.divs.length;
+    tests['empty-length'] = subjects.empty.length;
+    tests['dataset-class'] = toString.call(effin.dataset.call(subjects.html)).slice(8, -1);
     tests['camelize'] = dope.camelize('data-jack-rabbit-slims');
     tests['camelize-bracks'] = dope.camelize('[data-jack-rabbit-slims]');
-    tests['dataset-object'] = isEqual($html.dataset(), dope.dataset(docElem));
-    tests['keys'] = keys($html.dataset());
-    tests['get-movie-name'] = $html.dataset('movieName');
-    tests['set-director'] = $html.dataset('director', 'Tarantino').dataset('director');
-    //tests['set-director'] = dope.dataset(docElem, 'director', 'Tarantino');
+    tests['dataset-object'] = isEqual(effin.dataset.call(subjects.html), dope.dataset(docElem));
+    tests['keys'] = keys(effin.dataset.call(subjects.html));
+    tests['get-movie-name'] = effin.dataset.call(subjects.html, 'movieName');
+    tests['set-director'] = effin.dataset.call(
+      effin.dataset.call(subjects.html, 'director', 'Tarantino'),
+      'director'
+    );
     
     tests['set-year'] = dope.dataset(docElem, 'year', 1994);
-    tests['get-year'] = '1994' === $html.dataset('year');
-    tests['get-year-exact'] = 1994 === $html.dataset(['year']);
-    //tests['get-year-exact'] = 1994 === dope.dataset(docElem, ['year']);
+    tests['get-year'] = '1994' === effin.dataset.call(subjects.html, 'year');
+    tests['get-year-exact'] = 1994 === effin.dataset.call(subjects.html, ['year']);
     tests['parse-true'] = true === dope.parse('true');
     tests['parse-num'] = 'number' === typeof dope.parse('NaN');
-    tests['parse-inf'] = Infinity === dope.parse('Infinity');
+    tests['parse-inf'] = 1/0 === dope.parse('Infinity');
     tests['deletes'] = dope.deletes(docElem, 'genre producer');
-    //tests['dne'] = $html.dataset('dne');
     tests['dne'] = dope.dataset(docElem, 'dne');
-    
-    // IE7
-    // alert (typeof $html.dataset('n', null).dataset('n'));
-    // document.body.setAttribute('n', null);
-    // alert (typeof document.body.getAttribute('n'));
-
-    // set 4 via object, then delete 2 of them, then access 1 of the non-deleted ones:
-    tests['set-multi'] = $('div').dataset({
-         vincentVega: 'John Travolta'
-       , miaWallace: 'Uma Thurman'
-       , butchCoolidge: 'Bruce Willis'
-       , julesWinnfield: 'Samuel Jackson'
-      }).deletes('butchCoolidge julesWinnfield')
-      .dataset('miaWallace');
+    tests['set-multi'] = effin.dataset.call(effin.dataset.call(subjects.divs, {
+      vincentVega: 'John Travolta',
+      miaWallace: 'Uma Thurman'
+    }), 'miaWallace');
     
     //tests['to-data-selector-arr'] = dope.queryData(['a', ' b', null, 'cD'], false);
     //tests['to-data-selector-str'] = dope.queryData('a  b,, cD', false); // csv or ssv
@@ -251,9 +205,11 @@
     tests['query-data-multi'] = dope.queryData('miaWallace movieName').length;
 
     // print the test outputs
-    elo.each(tests, function(v, k, tests) {
-      html(id(k), String(v));
-    });
-  });
-}(this, document, this.console));
+    for (var k in tests) {
+      tests.hasOwnProperty(k) && html(document.getElementById(k), tests[k]);
+    }
+  }
+  
+  runTests();
+}(this, document);
 </script>
