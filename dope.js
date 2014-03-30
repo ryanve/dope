@@ -56,8 +56,7 @@
    * @return {string}
    */
   function camelize(s) {
-    if (typeof s != 'string')
-      return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
+    if (typeof s != 'string') return typeof s == 'number' || typeof s == 'boolean' ? '' + s : ''; 
     // Remove data- prefix and convert remaining dashed string to camelCase:
     return s.replace(cleanPre, '').replace(dashB4, camelHandler); // -a to A
   }
@@ -372,8 +371,7 @@
    */
   effins['dataset'] = function(k, v) {
     var kMulti = typeof k == 'object' ? !(void 0 === v && datatize(k[0])) : typeof k == 'function';
-    if (void 0 === v && !kMulti)
-      return dataset(this[0], k); // GET
+    if (void 0 === v && !kMulti) return dataset(this[0], k); // GET
     return (k = kMulti ? k : datatize(k)) ? eachNode(this, function(e, x) {
       x = typeof v == 'function' ? v.call(e) : v;
       kMulti ? dataset(e, k, x) : e.setAttribute(k, '' + x); 
@@ -387,8 +385,7 @@
    */  
   effins['attr'] = function(k, v) {
     var kMulti = typeof k == 'object' || typeof k == 'function';
-    if (void 0 === v && !kMulti)
-      return attr(this[0], k); // GET
+    if (void 0 === v && !kMulti) return attr(this[0], k); // GET
     return k ? eachNode(this, function(e, x) {
       x = typeof v == 'function' ? v.call(e) : v;
       kMulti ? attr(e, k, x) : e.setAttribute(k, '' + x); 
@@ -401,8 +398,7 @@
    * @param {Array|string}  keys  one or more SSV or CSV data attr keys or names
    */
   effins['deletes'] = function(keys) {
-    if (void 0 === keys)
-      return eachNode(this, resetDataset);
+    if (void 0 === keys) return eachNode(this, resetDataset);
     keys = typeof keys == 'string' ? keys.split(ssv) : [].concat(keys);
     return eachNode(this, removeAttr, map(keys, datatize));
   };
